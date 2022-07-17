@@ -1,0 +1,156 @@
+---
+title: Deploying a Gatsby Dev Blog on Github Pages
+date: 2022-07-22
+---
+
+# Deploying Our New Dev Blog
+
+Today we will deploying the new Gatsby-based dev blog that we worked through setting up [here](/2022/07/20/setting-up-with-gatsby/).
+
+<br/>
+
+## 1. We Want Automated Builds and Easy Deployment
+---
+
+For the time being, I'm just going to deploy to Github Pages. I will hook up a custom domain later. My main concern at the moment is just being able to add content and deploy changes to the site as effortlessly as possible. So now we go to Github.
+
+<br/>
+
+## 2. Setup a repository on Github
+---
+
+Create yourself a new, empty repository on Github. We made ours [here](https://github.com/jonkers3/dev-blog).
+
+The Gatsby CLI initialized a git repository for us at the very beginning of this. We need to commit our changes eventually, but first we should setup SSH access to Github. This will make everything much easier down the road.
+
+### Create an SSH key (use your own email)
+```sh
+ssh-keygen -t ed25519 -C 'me@my-email.com'
+
+eval "$(ssh-agent -s)"
+
+ssh-add ~/.ssh/id_ed25519
+```
+
+Copy the output of `cat ~/.ssh/id_ed25519.pub` to the clipboard, paste it [here](https://github.com/settings/ssh/new). Give it a name and save it, then verify that it is working by running `ssh -T git@github.com`.
+
+### Add a remote and push our code to Github.
+```sh
+git remote add origin git@github.com:jonkers3/dev-blog.git
+
+git push --set-upstream origin master
+```
+
+Now we can just commit changes and call `git push` to have them pushed right to the master branch on Github.
+
+At this point we should have our code live on Github in the _master_ branch. Let's see what it takes to get it deployed as an actual website.
+
+<br/>
+
+## 3. Setup Github Pages
+---
+
+[This template](https://github.com/marketplace/actions/github-pages-action) appears to be just the sort of things we are looking for: an easy way to deploy our static site to Github Pages. The provided example for Gatsby appears to get us pretty close to what we need. Create the following file:
+
+#### `.github/workflows/gh-pages.js`
+```yml
+name: GitHub Pages
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-20.04
+    permissions:
+      contents: write
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        if: ${{ github.ref == 'refs/heads/master' }}
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+```
+
+Commit this new file and merge it into the master branch. Goto the Settings page for the Github repository, and make sure Branch is set to `gh-pages` and the selected folder is `root`, as in the following picture:
+
+![](github-pages-settings.png)
+
+Now, every time we push changes to our master branch on Github, this action will be triggered to run our build process, and ultimately to deploy a new version of our website.
+
+<br/>
+
+## 4. Tweak path settings
+---
+
+Due to the nature of our Github Pages setup, we need to make the following change, which should be fairly self-explanatory:
+
+#### *`gatsby-config.ts`*
+```javascript
+
++ pathPrefix: 'dev-blog', // https://jonkers3.github.io/dev-blog <---
+
+  siteMetadata: ...
+```
+
+Given that at the moment all we really have is a blog, the extra `blog` in our URL is a big redundant, especially coming after the dev-blog that we're already in!
+
+Let's clean that up. It turns out that the easiest way to fix this right now is just to move the blog index and template files out of `src/pages/blog` folder and into `src/pages`.
+
+#### *`src/pages/index.js`*
+```sh
+mv src/pages/blog/index.js src/pages/index.js
+mv src/pages/blog/{mdx.slug}.js src/pages/{mdx.slug}.js
+```
+Fix the imports in these two files to reflect the change:
+
+#### *`src/pages/{mdx.slug}.js`*
+
+```jsx
+- import Code from '../../components/Code'
+- import Layout from '../../components/Layout'
+
++ import Code from '../components/Code'
++ import Layout from '../components/Layout'
+```
+
+#### *`src/pages/index.js`*
+```jsx
+- import Layout from '../../components/Layout'
++ import Layout from '../components/Layout'
+```
+
+<br/>
+
+## 6. Commit changes and push to Github
+---
+
+```sh
+git commit -a -u -m 'initial deploy' && git push
+```
+
+Now we more or less just need to push code, and not worry about deployment. At this point, our blog should be looking good on Github Pages. For now, ours is here: [https://jonkers3.github.io/dev-blog](https://jonkers3.github.io/dev-blog).
