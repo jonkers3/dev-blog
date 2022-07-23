@@ -4,7 +4,7 @@ import theme from 'prism-react-renderer/themes/github'
 import * as styles from './Code.module.css'
 
 const CopyButton = (props) => {
-  return <button className={styles.copyButton} {...props} />
+  return <button className={styles.button} {...props} />
 }
 
 /**
