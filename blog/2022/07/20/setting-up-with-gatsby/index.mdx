@@ -7,11 +7,11 @@ date: 2022-07-20
 
 Today we will set up our new dev blog. We will build it with Gatsby. The initial goals are simple blog functionality, markdown files to store our content, and a few other things one would probably like given the need to work with a lot of code - like syntax highlighting. A copy to clipboard button would also be nice on the user side. Our aims are primarily experimental and educational. Seeing as we already have some idea what we want, let's make it happen.
 
+Following along with this should produce more or less the page you're looking at, given the same mdx source file. The source file behind this page is [here](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx).
+
 ### The Gatsby CLI
 
 Use the CLI to bootstrap the project. We don't even need to install it as we can run it with NPX. While it is possible to install Gatsby and configure all of these plugins manually, I didn't really learn anything particularly useful by doing that, other than that the CLI installs some dependencies that aren't entirely obvious, so just use the CLI.
-
-Following along with this should produce more or less the page you're looking at, given the same mdx source file. The source file behind this page is [here](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx).
 
 <br/>
 
@@ -22,10 +22,11 @@ Following along with this should produce more or less the page you're looking at
 $ npx gatsby new
 
 What would you like to call your site?
+
 ✔ My Blog
 ```
 
-Run the CLI and follow the prompts. We have options as far as plugins, typescript or not, and things of that sort. We elected for MDX support, responsive images, and React Helmet. This generated the following gatsby-config.ts file for us:
+Run the CLI and follow the prompts. We have options as far as plugins, typescript or not, and things of that sort. We elected for MDX support, responsive images, and React Helmet. We're going to be using plain CSS modules. This generated the following gatsby-config.ts file for us:
 
 #### *`gatsby-config.ts`*
 ```javascript
@@ -94,12 +95,12 @@ They can be either md or mdx files. Make a folder called `blog` in the project r
 
 Now the MDX plugin will see whatever markdown files exist in the `blog` folder. In effect, the folder is now among the sources that will be returned when running the allMdx query in our GraphQL.
 
-As far as the posts themselves, as in the mdx files, we probably want them organized by date. For example, this post is located at `blog/2022/07/20/setting-up-with-gatsby/index.mdx`. Notice that the subfolder determines the URL slug. Rest assured we will be revisiting the question of what the optimal way to do this is, as it probably has SEO implications.
+As far as the posts themselves, as in the mdx files, we probably want them organized by date. For example, the mdx source behind this post is located in our filesystem at `blog/2022/07/20/setting-up-with-gatsby/index.mdx`. The folder structure determines the URL of our post, so it is important.  Rest assured we will be revisiting the question of what the optimal way to structure things is.
 
-In any case, the general idea is that we want some mdx files in our `blog` folder, and we want them to have at least title and date for frontmatter data. At a minimum:
+In any case, the general idea is that we want some mdx files in our `blog` folder. They should have at least a title and a date for their frontmatter data. Minimal example:
 
 #### *`blog/2022/07/20/setting-up-gatsby/index.mdx`*
-```markdown
+```mdx
 ---
 title: Setting Up Gatsby
 date: 2022-07-20
@@ -112,20 +113,16 @@ The Many
 <br/>
 
 ## 2b. Start the Development Server
-Having some files in the ```blog``` folder, we can now get the development server going...
+Having some files in our ```blog``` folder, we can now get the development server started...
 
 ```sh
 npm start
 ```
-At [localhost:8000](http://localhost:8000), you are congratulated on your new Gatsby site.
+At [localhost:8000](http://localhost:8000), you are congratulated on your new Gatsby site. We will replace this with our blog index page in due time.
 
-At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface.
+At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. This looks more complicated than it is. It is an interface that allows us to querying whatever data sources we have setup, and it helps us understand the shape of our data structures.
 
-The general idea is that we configure Gatsby to ingest various data sources - a headless CMS, a remote API, local files - and then to use it to generate web pages.  In our case it is quite simple, as all of our data is sourced from our `blog` folder and the mdx file(s) in it.
-
-The point is that Gatsby configuration revolves around making data available to and convenient to use in React components. This is the essential function of Gatsby.
-
-The following query is what we run to get the data needed to generate our blog's index page, for example. There are all kinds of useful attributes we could request in the same query: the word count for each post, for example.
+The following query is just the type of query we might run in the process of generating our blog index page. There are all kinds of useful attributes we could request in the same query: the word count for each post, for example.
 
 ```graphql
 query MyQuery {
@@ -152,7 +149,7 @@ query MyQuery {
 ## 3. Add an Index Page for our Blog Posts
 ---
 
-So far so good. We want now to make [localhost:8000/blog](http://localhost:8000/blog) serve as the index page for our blog. Basically just a list of all our blog posts. To get that working, ceate a folder called `blog` inside of `src/pages`, and then create the following file inside of it:
+So far so good. We want now to make an index page for our blog posts at [localhost:8000/blog](http://localhost:8000/blog). To get it working, we can make a folder called `blog` inside of `src/pages`, and then create the following file inside of it:
 
 #### *`src/pages/blog/index.js`*
 ```js
@@ -200,7 +197,7 @@ export default Blog
 ## 4. Create a Template for Blog Posts
 ---
 
-Now that we have the index page, its links need to be wired up to individual blog post pages. Create the following file to serve as the template for such pages:
+Now that we have the index page, its links need to be wired up to individual blog post pages. Create the following file to serve as our blog template:
 
 #### *`src/pages/blog/{mdx.slug}.js`*
 ```js
@@ -264,28 +261,29 @@ Back again in our gatsby-config file, we will replace the existing reference to 
 + },
 ```
 
-Now upon restarting the development server we get the desired behavior as far as inline images are concerned. As a bonus, we also get the neat progressive loading effect and the   thumbnail links.
+Now upon restarting the development server we get the desired behavior as far as inline images are concerned, which is a relief. As a bonus we also get this neat progressive loading effect and responsive thumbnails.
 
 <br/>
 
 ## 6. Color Syntax Highlighting with Prism.js
 ---
 
-Our use case involves the frequent usage of code blocks, so we might as well make them as easy to digest and as visually pleasing as possible. Syntax highlighting can be had with minimal effort by doing the following three things.
+Our use case involves the frequent usage of code blocks, so we might as well make them as easy to digest and as visually pleasing as possible. Prism.js gives us syntax highlighting in almost any language with fairly minimal effort. To get the basic functionality we need only do three things:
 
-### Install prism-react-renderer, mdx-utils
+### Install prism-react-renderer (and mdx-utils)
 
 ```sh
 npm i prism-react-renderer mdx-utils
 ```
 
-### Add a component to render code blocks
+### Create a new component to render code blocks
 
-#### *`src/components/Code.jsx`*
+#### *`src/components/Code/index.jsx`*
 ```jsx
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
+import * as styles from './code.module.css'
 
 const Code = ({ codeString, language, ...props }) => {
   const [isCopied, setIsCopied] = React.useState(false)
@@ -302,6 +300,7 @@ const Code = ({ codeString, language, ...props }) => {
           className={className}
           style={{ ...style, padding: '20px', position: 'relative' }}
         >
+
           {tokens.map((line, i) => (
             <div key={i} {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (
@@ -316,6 +315,13 @@ const Code = ({ codeString, language, ...props }) => {
 }
 
 export default Code
+```
+
+Also create a CSS module file for the component. We will come back to it momentarily.
+
+#### *`src/components/Code/code.module.css`*
+```css
+
 ```
 
 ### Update layout to make use of MDXProvider and mdx-utils
@@ -379,55 +385,39 @@ Given the endless possibilities we will have to have a post entirely dedicated t
 
 The main thing we are in need of is some kind of navigation controls - a nav bar, perhaps - and some kind of layout scheme. Header, footer, that sort of thing. At the moment though, the only thing thats urgent is getting our content nicely centered. Let's create a shared Layout component where all of these things can eventually be addressed.
 
-I have some thinking to do about what I want as far as the UI is concerned. Most of my thinking has been expressive of a desire for minimalism. Setting up a big dependency on a UI framework doesn't sound appealing at the moment. For the time being I'm just going to be using styled-components, which we install like so:
+Let's create a common Layout file and a Nav/Header component. Then we just need to change the index and the blog template so that they are wrapped with this new Layout component.
 
-```sh
-npm i gatsby-plugin-styled-components styled-components babel-plugin-styled-components
-```
-
-Configure Gatsby to use the plugin:
-
-#### *`gatsby-config.ts`*
-```javascript
-plugins: [
-  ...
-
-+ 'gatsby-plugin-styled-components',
-
-  ...
-]
-```
-
-Let's now create a common Layout file. We'll include a rudimentary header component with a link to our index page. Then we just need to change the index and the blog template so that they are wrapped with this new Layout component.
-
-#### *`src/components/Layout.jsx`*
+#### *`src/components/Layout/index.jsx`*
 ```jsx
-import { Link } from 'gatsby'
 import React from 'react'
-import styled from 'styled-components'
-
-export const PageContainer = styled.div`
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 0px;
-  box-sizing: border-box;
-`
-export const InnerContainer = styled.div`
-  padding: 12px;
-`
-
-const Header = styled.div``
+import Nav from '../Nav'
+import * as styles from './layout.module.css'
 
 const Layout = ({ children }) => (
-  <PageContainer>
-    <Header>
-      <Link to='/blog'>Home</Link>
-    </Header>
-    <InnerContainer>{children}</InnerContainer>
-  </PageContainer>
+  <div className={styles.pageContainer}>
+    <Nav />
+    <div className={styles.innerContainer}>{children}</div>
+  </div>
 )
 
 export default Layout
+```
+
+#### *`src/components/Layout/layout.module.css`*
+```css
+.page-container {
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  max-width: 860px;
+  font-family: sans-serif;
+}
+
+.inner-container {
+  margin-top: 7em;
+  padding: 12px;
+}
+
 ```
 
 #### *`src/pages/blog/{mdx.slug}.js`*
@@ -473,28 +463,14 @@ Notice what happens when we try to copy and paste one of those code blocks? That
 
 If you've made it to this point, you should have a pretty spiffy looking setup coming together. As far as our initial list of desired features, the only thing we have yet to do is the Copy-to-Clipboard button. This is the last task of our initial setup. We need to change only one file to get this working. Add the following code to it:
 
-#### *`src/components/Code.jsx`*
+#### *`src/components/Code/index.jsx`*
 ```jsx
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
 
 + const CopyButton = (props) => {
-+   return (
-+     <button
-+       style={{
-+         position: 'absolute',
-+         top: 0,
-+         right: 0,
-+         margin: '8px',
-+         padding: '8px 12px 8px 12px',
-+         borderRadius: '8px',
-+         borderWidth: 0,
-+         background: 'deepskyblue'
-+       }}
-+       {...props}
-+     />
-+   )
++   return <button className={styles.copyButton} {...props} />
 + }
 
 + const copyToClipboard = (str) => {
@@ -550,17 +526,31 @@ const Code = ({ codeString, language, ...props }) => {
 export default Code
 ```
 
-I mostly just like the way it looks. This type of code block is actually the perfect example of when such a buttons feels less helpful than it seems like it should be. In any case, we now have our button.
+Now add the CSS for our to the CSS module file we created earlier:
+
+#### *`src/components/Code/code.module.css`*
+```css
+.copy-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px;
+  padding: 8px 12px 8px 12px;
+  border-radius: 8px;
+  border-width: 0;
+  background: deepskyblue;
+}
+```
+
+I mostly just like the way having the button looks, to be honest. It isn't super useful in every possible situation, but it is still kind of nice to have there.
 
 <br/>
 
 ## 9. Wrapup
 ---
 
-Here now we have our basic blog structure in place.
+We now drop markdown and image files into our blog folder and know that when our app gets built and deployed, our files will be processed into blazing fast pre-built static pages, looking good and ready to be served.
 
-We can take markdown and mdx files, and adjacent image files, and we can drop them into our blog folder, where they will more or less be automatically processed into blazing fast pre-built static pages ready to serve.
+Markdown and React go _good_ together. Gatsby's data layer is a perfect use case for GraphQL. These things are really meant for each other, and it is not surprising that this stack is a popular way to build websites.
 
-Markdown and React go _good_ together. Gatsby's data layer is a perfect use case for GraphQL. These things seem to be meant for each other. It isn't hard to see why this is such a popular way to build modern websites.
-
-In [Part II](/2022/07/22/setting-up-with-gatsby-ii) we will deploy our new blog.
+For the [second part of this post](/2022/07/22/setting-up-with-gatsby-ii), we will concern ourselves with how it is that our app is going to be built and deployed. Then we will do it.
