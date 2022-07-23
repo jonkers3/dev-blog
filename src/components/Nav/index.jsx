@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
-import * as styles from './nav.module.css'
+import * as styles from './Nav.module.css'
 
 const GithubLink = () => (
   <svg

@@ -50,7 +50,7 @@ At this point we should have our code live on Github in the _master_ branch. Let
 ## 3. Setup Github Pages
 ---
 
-[This template](https://github.com/marketplace/actions/github-pages-action) appears to be just the sort of things we are looking for: an easy way to deploy our static site to Github Pages. The provided example for Gatsby appears to get us pretty close to what we need. Create the following file:
+[This template](https://github.com/marketplace/actions/github-pages-action) appears to be just the sort of things we are looking for: something that makes it really easy way to deploy a static site to Github Pages. And it does do that. In fact, creating this one file is almost the only thing we need to do.
 
 #### `.github/workflows/gh-pages.js`
 ```yml
@@ -96,46 +96,43 @@ jobs:
           publish_dir: ./public
 ```
 
-Commit this new file and merge it into the master branch. Goto the Settings page for the Github repository, and make sure Branch is set to `gh-pages` and the selected folder is `root`, as in the following picture:
+Commit this new file and merge it into the master branch. Goto the Settings page for the Github repository, and make sure Branch is set to `gh-pages` and the selected folder is `root`; in other words make sure it is setup like it is in this picture:
 
 ![](github-pages-settings.png)
 
-Now, every time we push changes to our master branch on Github, this action will be triggered to run our build process, and ultimately to deploy a new version of our website.
+Once those things are setup correct;y, that should be it. Pushing changes to Github (`git push`) now triggers our workflow, and the process culminates in a new version of the site being deployed to Github Pages. Seems to take around two minutes from `git push` to live.
 
 <br/>
 
-## 4. Tweak path settings
+## 4. Update gatsby-config to fix images
 ---
 
-Due to the nature of our Github Pages setup, we need to make the following change, which should be fairly self-explanatory:
+Due to the nature of our Github Pages setup, we need to make the following change to ensure that all of our images and links are working right. Of course the value here needs to match our Github setup:
 
 #### *`gatsby-config.ts`*
 ```javascript
 
-+ pathPrefix: 'dev-blog', // https://jonkers3.github.io/dev-blog <---
++ pathPrefix: 'dev-blog', // https://jonkers3.github.io/dev-blog <-
 
   siteMetadata: ...
 ```
 
-Given that at the moment all we really have is a blog, the extra `blog` in our URL is a big redundant, especially coming after the dev-blog that we're already in!
-
-Let's clean that up. It turns out that the easiest way to fix this right now is just to move the blog index and template files out of `src/pages/blog` folder and into `src/pages`.
+Now that we're in our home on Github Pages, the extra `blog` in our URL has become completely redundant, so let's get rid of it. We can fix this pretty easily just by moving the files in the `src/pages/blog` folder into `src/pages` instead. Fix the paths of the imports in the files to reflect this change, and that should do it.
 
 #### *`src/pages/index.js`*
 ```sh
 mv src/pages/blog/index.js src/pages/index.js
 mv src/pages/blog/{mdx.slug}.js src/pages/{mdx.slug}.js
 ```
-Fix the imports in these two files to reflect the change:
 
 #### *`src/pages/{mdx.slug}.js`*
 
 ```jsx
-- import Code from '../../components/Code'
-- import Layout from '../../components/Layout'
-
 + import Code from '../components/Code'
+- import Code from '../../components/Code'
+
 + import Layout from '../components/Layout'
+- import Layout from '../../components/Layout'
 ```
 
 #### *`src/pages/index.js`*
@@ -153,4 +150,4 @@ Fix the imports in these two files to reflect the change:
 git commit -a -u -m 'initial deploy' && git push
 ```
 
-Now we more or less just need to push code, and not worry about deployment. At this point, our blog should be looking good on Github Pages. For now, ours is here: [https://jonkers3.github.io/dev-blog](https://jonkers3.github.io/dev-blog).
+At this point, your blog should be looking good on Github Pages. For now, we're up here: [https://jonkers3.github.io/dev-blog](https://jonkers3.github.io/dev-blog).

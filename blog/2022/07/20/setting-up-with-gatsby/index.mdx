@@ -70,6 +70,16 @@ const config: GatsbyConfig = {
 export default config
 ```
 
+If your setup is like ours, you are using Typescript and CSS modules. If so, you will want to create a definitions file like this to prevent the TS compiler from finding fault with our CSS module imports.
+
+#### *`src/global.d.ts.ts`*
+```typescript
+declare module '*.css' {
+  const content: { [className: string]: string }
+  export = content
+}
+```
+
 <br/>
 
 ## 2. Configure a folder with some blog posts
@@ -317,10 +327,18 @@ const Code = ({ codeString, language, ...props }) => {
 export default Code
 ```
 
-Also create a CSS module file for the component. We will come back to it momentarily.
-
 #### *`src/components/Code/code.module.css`*
 ```css
+.button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px;
+  padding: 8px 12px 8px 12px;
+  border-radius: 8px;
+  border-width: 0;
+  background: deepskyblue;
+}
 
 ```
 
@@ -454,6 +472,24 @@ const Blog = ({ data }) => {
 }
 ```
 
+Let's also make a standard global CSS file for rules that need to apply everywhere.
+
+#### *`src/styles/global.css`*
+```css
+body {
+  margin: 0px;
+  font-family: 'Open Sans', sans-serif;
+  line-height: 1.65;
+  text-rendering: optimizeLegibility;
+  font-size: 1.015rem;
+}
+```
+
+#### *`gatsby-browser.js`*
+```css
+import './src/styles/global.css'
+```
+
 Notice what happens when we try to copy and paste one of those code blocks? That's exactly the type of thing we will try to improve when we revisit our ```prism.js``` setup, sometime in the near future.
 
 <br/>
@@ -468,6 +504,7 @@ If you've made it to this point, you should have a pretty spiffy looking setup c
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
+import * as styles from './code.module.css'
 
 + const CopyButton = (props) => {
 +   return <button className={styles.copyButton} {...props} />
@@ -524,22 +561,6 @@ const Code = ({ codeString, language, ...props }) => {
 }
 
 export default Code
-```
-
-Now add the CSS for our to the CSS module file we created earlier:
-
-#### *`src/components/Code/code.module.css`*
-```css
-.copy-button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 8px;
-  padding: 8px 12px 8px 12px;
-  border-radius: 8px;
-  border-width: 0;
-  background: deepskyblue;
-}
 ```
 
 I mostly just like the way having the button looks, to be honest. It isn't super useful in every possible situation, but it is still kind of nice to have there.

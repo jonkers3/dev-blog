@@ -1,6 +1,6 @@
 import React from 'react'
 import Nav from '../Nav'
-import * as styles from './layout.module.css'
+import * as styles from './Layout.module.css'
 
 const Layout = ({ children }) => (
   <div className={styles.pageContainer}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
-import * as styles from './code.module.css'
+import * as styles from './Code.module.css'
 
 const CopyButton = (props) => {
   return <button className={styles.copyButton} {...props} />
