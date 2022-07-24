@@ -204,8 +204,9 @@ exports.createSchemaCustomization = ({ actions }) => {
     }
   `)
 }
+```
 
-But we don't plan on having an empty blog or markdown files with inconsistent metadata, so it isn't really necessary. It helps illuminate a bit how GraphQL queries work with frontmatter in Gatsby.
+But we don't plan on having an empty blog or markdown files with inconsistent metadata, so it isn't really necessary, but it does illuminate a bit how GraphQL queries work with frontmatter in Gatsby.
 
 To create our index page, replace the contents of `src/pages/index.js` file with the following:
 
@@ -250,7 +251,7 @@ export const query = graphql`
 export default Blog
 ```
 
-Gatsby works some magic here, and the results of the `query` that we export end up getting passed right back into the component as a prop called `data`.
+Obviously there is some kind of magic going on here. Gatsby takes the results of the `query` that gets exported and passes them right back into the component as a prop called `data`. GraphQL is perfect for this. Because the shape of the query is the shape of the data structure we are dereferencing in our component as we list out the posts.
 
 <br/>
 
@@ -406,7 +407,7 @@ const Blog = ({ data }) => {
 ## 6. Configure MDX to work with Inline Images
 ---
 
-Storing image files directly alongside the markdown file seems perfect for pictures that are only used in one place, screenshots for a page like this being a pretty good example. In other words, we want a structure like this for our `blog` folder:
+Storing image files directly alongside the markdown files is obviously ideal in our case.
 
 We want to be able to reference images in our Markdown files like this:
 
@@ -414,7 +415,7 @@ We want to be able to reference images in our Markdown files like this:
 ![alt text](hello.png)
 ```
 
-For this to work, we need to make a change to the configuration for the `gatsby-plugin-mdx` plugin.
+We need to make a change to the configuration for the `gatsby-plugin-mdx` plugin due to the way our files are organized.
 
 Replace the existing reference to ```'gatsby-plugin-mdx'``` with a new object definition, like this:
 
