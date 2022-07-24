@@ -7,7 +7,7 @@ const CopyButton = (props) => {
   return <button className={styles.button} {...props} />
 }
 
-const Code = ({ codeString, language, file, ...props }) => {
+const Code = ({ button, file, codeString, language, ...props }) => {
   const [isCopied, setIsCopied] = React.useState(false)
 
   return (
@@ -97,3 +97,5 @@ const Code = ({ codeString, language, file, ...props }) => {
 }
 
 export default Code
+
+export const Pre = ({ txt }) => <pre>{txt}</pre>

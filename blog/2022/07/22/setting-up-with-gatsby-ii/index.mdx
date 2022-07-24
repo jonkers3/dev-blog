@@ -9,7 +9,7 @@ Today we will deploying the new Gatsby-based dev blog that we worked through set
 
 Today, we will just deploy to Github Pages, mostly just because it is free and probably easy to set up.
 
-Our goal at the moment is to get something up that we can easily add content and deploy changes to. So we will now head over to Github and do just that.
+Our main goal at the moment is just to get something up that we can easily add content and deploy changes to.
 
 <br/>
 
@@ -19,6 +19,7 @@ Our goal at the moment is to get something up that we can easily add content and
 Create yourself a new, empty repository on [Github](https://github.com/new). Locally, the Gatsby CLI should already have initialized a git repository for us. If not, `git init`.
 
 ### Create an SSH key (with your own email)
+
 ```sh
 ssh-keygen -t ed25519 -C 'your@own-email.com'
 
@@ -26,6 +27,7 @@ eval "$(ssh-agent -s)"
 
 ssh-add ~/.ssh/id_ed25519
 ```
+
 
 Copy the output of `cat ~/.ssh/id_ed25519.pub` to the clipboard, paste it [here](https://github.com/settings/ssh/new) and save it, then verify things are working by running:
 ```sh
@@ -123,4 +125,4 @@ Push the rest of your changes and things should be good to go.
 git commit -a -u -m 'initial deploy' && git push
 ```
 
-At this point, the blog should be looking good on Github Pages.
+At this point, the blog should be looking good on Github Pages. Top be honest, I was expecting it to take a little more time and effort

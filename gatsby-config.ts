@@ -23,12 +23,6 @@ const config: GatsbyConfig = {
               maxWidth: 900
             }
           }
-          // {
-          //   resolve: `gatsby-remark-prismjs`,
-          //   options: {
-          //     showLineNumbers: true
-          //   }
-          // }
         ]
       }
     },
