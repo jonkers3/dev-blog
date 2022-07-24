@@ -9,21 +9,21 @@ Today we will deploying the new Gatsby-based dev blog that we worked through set
 
 <br/>
 
-## 1. We Want Automated Builds and Easy Deployment
+## 1. We Want Easy Deployment
 ---
 
-For the time being, I'm just going to deploy to Github Pages. I will hook up a custom domain later. My main concern at the moment is just being able to add content and deploy changes to the site as effortlessly as possible. So now we go to Github.
+Initially, we will just deploy to Github Pages. For today, the main concern is just getting something up there that we can easily add content and deploy changes to. So we will now head over to Github and do just that.
 
 <br/>
 
 ## 2. Setup a repository on Github
 ---
 
-Create yourself a new, empty repository on Github. We made ours [here](https://github.com/jonkers3/dev-blog).
+Create yourself a new, empty repository on [Github](https://github.com/new).
 
-The Gatsby CLI initialized a git repository for us at the very beginning of this. We need to commit our changes eventually, but first we should setup SSH access to Github. This will make everything much easier down the road.
+The Gatsby CLI should have initialized a git repository for us at the very beginning. Setting up SSH access to Github will things much easier:
 
-### Create an SSH key (use your own email)
+### Create an SSH key (with your own email)
 ```sh
 ssh-keygen -t ed25519 -C 'me@my-email.com'
 
@@ -32,7 +32,10 @@ eval "$(ssh-agent -s)"
 ssh-add ~/.ssh/id_ed25519
 ```
 
-Copy the output of `cat ~/.ssh/id_ed25519.pub` to the clipboard, paste it [here](https://github.com/settings/ssh/new). Give it a name and save it, then verify that it is working by running `ssh -T git@github.com`.
+Copy the output of `cat ~/.ssh/id_ed25519.pub` to the clipboard, paste it [here](https://github.com/settings/ssh/new) and save it, then verify things are working by running:
+```sh
+ssh -T git@github.com
+```
 
 ### Add a remote and push our code to Github.
 ```sh
@@ -41,18 +44,18 @@ git remote add origin git@github.com:jonkers3/dev-blog.git
 git push --set-upstream origin master
 ```
 
-Now we can just commit changes and call `git push` to have them pushed right to the master branch on Github.
+At this point we should have our code live on Github in our _master_ branch.
 
-At this point we should have our code live on Github in the _master_ branch. Let's see what it takes to get it deployed as an actual website.
+Now, we can just commit our changes and `git push`, and our code with go straight to the master branch on Github.
 
 <br/>
 
 ## 3. Setup Github Pages
 ---
 
-[This template](https://github.com/marketplace/actions/github-pages-action) appears to be just the sort of things we are looking for: something that makes it really easy way to deploy a static site to Github Pages. And it does do that. In fact, creating this one file is almost the only thing we need to do.
+Gatsby is not the default for Github Pages, but it can still work. [Github Pages Action](https://github.com/marketplace/actions/github-pages-action) is just the sort of thing we are looking for, and the only thing we need to do to leverage it is create a yml file. This is a slightly modified version of the example they give for Gatsby:
 
-#### `.github/workflows/gh-pages.js`
+#### `.github/workflows/gh-pages.yml`
 ```yml
 name: GitHub Pages
 
@@ -96,28 +99,25 @@ jobs:
           publish_dir: ./public
 ```
 
-Commit this new file and merge it into the master branch. Goto the Settings page for the Github repository, and make sure Branch is set to `gh-pages` and the selected folder is `root`; in other words make sure it is setup like it is in this picture:
+On the settings page for your Github repository, make sure that branch is set to `gh-pages` and that selected folder is `root`; it should look like this:
 
 ![](github-pages-settings.png)
 
-Once those things are setup correct;y, that should be it. Pushing changes to Github (`git push`) now triggers our workflow, and the process culminates in a new version of the site being deployed to Github Pages. Seems to take around two minutes from `git push` to live.
+Once those things are setup correctly, that should be it. Pushing changes to Github (`git push`) will trigger the workflow, and the process will culminate in the new version of our site being deployed to Github Pages.
 
 <br/>
 
 ## 4. Update gatsby-config to fix images
 ---
 
-Due to the nature of our Github Pages setup, we need to make the following change to ensure that all of our images and links are working right. Of course this string value needs to match the name of the repository in Github:
+Due to the nature of our Github Pages setup, we need to make the following change to ensure that all of our images and links are working right. The value for our pathPrefix is, of course, the name of the Github repository. Add the pathPrefix to your config:
 
 #### *`gatsby-config.ts`*
 ```javascript
-
-+ pathPrefix: 'dev-blog', // https://jonkers3.github.io/dev-blog <-
-
-  siteMetadata: ...
+  pathPrefix: 'dev-blog',
 ```
 
-Now that we're in our home on Github Pages, the extra `blog` in our URL has become completely redundant, so let's get rid of it. We can fix this pretty easily just by moving the files in the `src/pages/blog` folder into `src/pages` instead. Fix the paths of the imports in the files to reflect this change, and that should do it.
+At this point, the extra `blog` in our URL is redundant, so let's get rid of it. We can just move the files in the `src/pages/blog` folder into `src/pages`.
 
 #### *`src/pages/index.js`*
 ```sh
@@ -125,21 +125,7 @@ mv src/pages/blog/index.js src/pages/index.js
 mv src/pages/blog/{mdx.slug}.js src/pages/{mdx.slug}.js
 ```
 
-#### *`src/pages/{mdx.slug}.js`*
-
-```jsx
-+ import Code from '../components/Code'
-- import Code from '../../components/Code'
-
-+ import Layout from '../components/Layout'
-- import Layout from '../../components/Layout'
-```
-
-#### *`src/pages/index.js`*
-```jsx
-- import Layout from '../../components/Layout'
-+ import Layout from '../components/Layout'
-```
+This effectively just makes our blog the index page of our site, and our URL is cleaner.
 
 <br/>
 

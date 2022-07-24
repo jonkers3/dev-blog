@@ -6,7 +6,7 @@ const GithubLink = () => (
   <svg
     aria-hidden='true'
     role='img'
-    class='octicon octicon-mark-github'
+    className='octicon octicon-mark-github'
     viewBox='0 0 16 16'
     width='32'
     height='32'
@@ -31,7 +31,7 @@ export default function Nav() {
           </li>
           <li className={styles.navLinkItem}>
             <Link
-              href='https://github.com/jonkers3/dev-blog'
+              to='https://github.com/jonkers3/dev-blog'
               className={styles.navLinkItem}
             >
               <GithubLink />

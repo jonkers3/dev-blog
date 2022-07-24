@@ -3,8 +3,8 @@ import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
 import { preToCodeBlock } from 'mdx-utils'
-import Code from '../components/Code'
-import Layout from '../components/Layout'
+import Code from '@components/Code'
+import Layout from '@components/Layout'
 
 const components = {
   pre: (preProps) => {
