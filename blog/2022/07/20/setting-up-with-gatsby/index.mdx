@@ -16,12 +16,9 @@ Use the CLI to bootstrap the project. We don't even need to install it as we can
 ## 1. Bootstrapping a new Gatsby Project
 ---
 
+#### *`cli`*
 ```
-$ npx gatsby new
-
-What would you like to call your site?
-
-✔ My Blog
+npx gatsby new
 ```
 
 Run the CLI and follow the prompts.
@@ -313,7 +310,13 @@ import * as styles from './layout.module.css'
 
 const Layout = ({ children }) => (
   <div className={styles.pageContainer}>
-    <Nav />
+      <nav>
+        <ul className={styles.navLinks}>
+          <li className>
+            <Link to='/'>Home</Link>
+          </li>
+        </ul>
+      </nav>
     <div className={styles.innerContainer}>{children}</div>
   </div>
 )
@@ -336,6 +339,13 @@ export default Layout
   padding: 12px;
 }
 
+.nav-links {
+  column-count: 2;
+  column-gap: 85%;
+  display: flex;
+  list-style: none;
+  padding-left: 0;
+}
 ```
 
 Speaking of styles, let's also make a global CSS file for rules that need to apply everywhere.
