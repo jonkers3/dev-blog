@@ -5,16 +5,17 @@ date: 2022-07-20
 
 # Setting Up a Dev Blog with Gatsby in 2022
 
-Today we will set up our new dev blog. We will build it with Gatsby. The initial goals are simple blog functionality, markdown files to store our content, and a few other things one would probably like given the need to work with a lot of code - like syntax highlighting. A copy to clipboard button would also be nice on the user side. Our aims are primarily experimental and educational. Seeing as we already have some idea what we want, let's make it happen.
+Today we will set up our new dev blog. We will build it with Gatsby. The initial goals are basic functionality (an index page with links to individual posts) and a few other things one would probably like given the need to work with a lot of code - syntax highlighting being one good example, copy-to-clipboard button another.  We will use markdown files for our content.
 
-Following along with this should produce more or less the page you're looking at, given the same mdx source file. The source file behind this page is [here](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx).
+This is an example of how to bootstrap a new blog with Gatsby in 2022.
 
-Use the CLI to bootstrap the project. We don't even need to install it as we can run it with NPX. While it is possible to install Gatsby and configure all of these plugins manually, I didn't really learn anything particularly useful by doing that, other than that the CLI installs some dependencies that aren't entirely obvious, so just use the CLI.
 
 <br/>
 
 ## 1. Bootstrapping a new Gatsby Project
 ---
+
+We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_.
 
 #### *`cli`*
 ```
@@ -32,10 +33,10 @@ import type { GatsbyConfig } from 'gatsby'
 const config: GatsbyConfig = {
   siteMetadata: {
     title: `My New Dev Blog`,
-    siteUrl: `...`
+    siteUrl: `http://my.blog.local`
   },
 
-  graphqlTypegen: true, // typescript only
+  graphqlTypegen: true,
 
   plugins: [
     'gatsby-plugin-image',
@@ -133,32 +134,36 @@ In effect, this folder is now visible to our GraphQL queries.
 
 As far as the posts themselves, as in the mdx files, we will organize them by date in subfolders. The mdx source behind this post is located in our filesystem at `blog/2022/07/20/setting-up-with-gatsby/index.mdx`, for example.
 
-This folder structure will also determine the URL of our post, so it is quite important. Rest assured we will be revisiting the question of what the optimal way to do this is.
+Our file system will also determine the URL of our post, so the way we organize our files is extremely important. This folder structure that we want is basically this:
 
-In any case, the general idea at this juncture is that we have [something](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) in our `blog` folder as far as markdown files go, with at least title and a date frontmatter data, like this:
-
-#### *`blog/2022/07/20/setting-up-gatsby/index.mdx`*
-```mdx
----
-title: Setting Up Gatsby
-date: 2022-07-20
----
-# The One
-
-stuff
 ```
-
-
+📦blog
+ └ 📂2022
+ │ └ 📂07
+ │ │ ├ 📂20
+ │ │ │ └ 📂setting-up-with-gatsby
+ │ │ │ │ ├ 📜index.mdx
+ │ │ │ │ └ 📜mdx-graphql.png
+ │ │ ├ 📂22
+ │ │ │ └ 📂setting-up-with-gatsby-ii
+ │ │ │ │ ├ 📜github-pages-settings.png
+ │ │ │ │ └ 📜index.mdx
+```
 
 <br/>
 
-Having some files in our ```blog``` folder, we can now get the development server started...
+## 3. Create the blog index page
+---
+
+Start the development server...
 
 ```sh
 npm start
 ```
 
-At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically it's just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from. We use it to develop the queries that we need to power our site. For example, this is similar to the query we run to get the data for the blog index page component:
+At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically this is just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from (like our `blog` folder). We use the UI to develop the queries we need to power our site.
+
+Try running the following query while our `blog` folder is still empty:
 
 ```graphql
 query BlogPosts {
@@ -179,37 +184,30 @@ query BlogPosts {
 }
 ```
 
-Such a query might return the following response, which is then passed into our Gatsby page component as a prop, as we will see when we create the blog index page.
+GraphQL will throws an error: `Value "frontmatter___date" does not exist in "MdxFieldsEnum" enum`. We can fix this by placing at least [one MDX file](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) that _does_ have a date field in our `blog` folder.
 
-```json
-{
-  "allMdx": {
-    "edges": [
-      {
-        "node": {
-          "slug": "2022/07/22/setting-up-with-gatsby-ii/",
-          "frontmatter": {
-            "date": "22 July 2022",
-            "title": "Deploying a Gatsby Dev Blog on Github Pages"
-          },
-          "wordCount": {
-            "words": 408
-          }
-        }
-      },
+But what _exactly_ is going on here_?
 
-      ...
-    ]
-  }
+If we really wanted to, we could add the following code to our gatsby-node file, and the query would return an empty result set instead of erroring.
+
+#### *`gatsby-node.ts`*
+```javascript
+exports.createSchemaCustomization = ({ actions }) => {
+  const { createTypes } = actions
+
+  createTypes(`
+    type Mdx implements Node {
+      frontmatter: MdxFrontmatter
+    }
+    type MdxFrontmatter {
+      date: Date @dateformat
+    }
+  `)
 }
-```
 
-<br/>
+But we don't plan on having an empty blog or markdown files with inconsistent metadata, so it isn't really necessary. It helps illuminate a bit how GraphQL queries work with frontmatter in Gatsby.
 
-## 3. Create the blog index page
----
-
-We need an index page for our blog. Replace the contents of `src/pages/index.js` file with the following:
+To create our index page, replace the contents of `src/pages/index.js` file with the following:
 
 #### *`src/pages/index.js`*
 ```jsx
@@ -252,7 +250,7 @@ export const query = graphql`
 export default Blog
 ```
 
-Gatsby does some sort of magic here. The results of the `query` that we export get passed into the React component as a prop called `data`.
+Gatsby works some magic here, and the results of the `query` that we export end up getting passed right back into the component as a prop called `data`.
 
 <br/>
 
@@ -305,7 +303,6 @@ We will create a shared Layout component to address these things.
 #### *`src/components/Layout/index.jsx`*
 ```jsx
 import React from 'react'
-import Nav from '@components/Nav'
 import * as styles from './layout.module.css'
 
 const Layout = ({ children }) => (
@@ -411,19 +408,6 @@ const Blog = ({ data }) => {
 
 Storing image files directly alongside the markdown file seems perfect for pictures that are only used in one place, screenshots for a page like this being a pretty good example. In other words, we want a structure like this for our `blog` folder:
 
-```
-📦blog
- ┗ 📂2022
- ┃ ┗ 📂07
- ┃ ┃ ┣ 📂20
- ┃ ┃ ┃ ┗ 📂setting-up-with-gatsby
- ┃ ┃ ┃ ┃ ┣ 📜index.mdx
- ┃ ┃ ┃ ┃ ┗ 📜mdx-graphql.png
- ┃ ┃ ┣ 📂22
- ┃ ┃ ┃ ┗ 📂setting-up-with-gatsby-ii
- ┃ ┃ ┃ ┃ ┣ 📜github-pages-settings.png
- ┃ ┃ ┃ ┃ ┗ 📜index.mdx
-```
 We want to be able to reference images in our Markdown files like this:
 
 ```markdown
@@ -481,8 +465,6 @@ import theme from 'prism-react-renderer/themes/github'
 import * as styles from './code.module.css'
 
 const Code = ({ codeString, language, ...props }) => {
-  const [isCopied, setIsCopied] = React.useState(false)
-
   return (
     <Highlight
       {...defaultProps}
@@ -510,21 +492,6 @@ const Code = ({ codeString, language, ...props }) => {
 }
 
 export default Code
-```
-
-#### *`src/components/Code/code.module.css`*
-```css
-.button {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin: 8px;
-  padding: 8px 12px 8px 12px;
-  border-radius: 8px;
-  border-width: 0;
-  background: deepskyblue;
-}
-
 ```
 
 ### Use MDXProvider wrap MDXRenderer
@@ -595,21 +562,7 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
 import * as styles from './code.module.css'
 
-+ const CopyButton = (props) => {
-+   return <button className={styles.copyButton} {...props} />
-+ }
-
-+ const copyToClipboard = (str) => {
-+   const el = document.createElement('textarea')
-+   el.value = str
-+   el.setAttribute('readonly', '')
-+   el.style.position = 'absolute'
-+   el.style.left = '-9999px'
-+   document.body.appendChild(el)
-+   el.select()
-+   document.execCommand('copy')
-+   document.body.removeChild(el)
-+ }
++ const CopyButton = (props) => <button className={styles.button} {...props} />
 
 const Code = ({ codeString, language, ...props }) => {
   const [isCopied, setIsCopied] = React.useState(false)
@@ -628,9 +581,9 @@ const Code = ({ codeString, language, ...props }) => {
         >
 +         <CopyButton
 +           onClick={() => {
-+             copyToClipboard(codeString)
++             navigator.clipboard.writeText(codeString)
 +             setIsCopied(true)
-+             setTimeout(() => setIsCopied(false), 3000)
++             setTimeout(() => setIsCopied(false), 4000)
 +           }}
 +         >
 +           {isCopied ? <i>Copied!</i> : 'Copy'}
@@ -650,6 +603,20 @@ const Code = ({ codeString, language, ...props }) => {
 }
 
 export default Code
+```
+#### *`src/components/Code/code.module.css`*
+```css
+.button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 8px;
+  padding: 8px 12px 8px 12px;
+  border-radius: 8px;
+  border-width: 0;
+  background: deepskyblue;
+}
+
 ```
 
 I mostly just like the way having the button looks, to be honest. It isn't super useful in every possible situation, but it is still kind of nice to have there.
