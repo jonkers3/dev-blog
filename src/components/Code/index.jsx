@@ -7,22 +7,7 @@ const CopyButton = (props) => {
   return <button className={styles.button} {...props} />
 }
 
-/**
- * @todo vet this method / write-up best ways to handle clipboard
- */
-const copyToClipboard = (str) => {
-  const el = document.createElement('textarea')
-  el.value = str
-  el.setAttribute('readonly', '')
-  el.style.position = 'absolute'
-  el.style.left = '-9999px'
-  document.body.appendChild(el)
-  el.select()
-  document.execCommand('copy')
-  document.body.removeChild(el)
-}
-
-const Code = ({ codeString, language, ...props }) => {
+const Code = ({ button, codeString, language, ...props }) => {
   const [isCopied, setIsCopied] = React.useState(false)
 
   return (
@@ -37,16 +22,17 @@ const Code = ({ codeString, language, ...props }) => {
           className={className}
           style={{ ...style, padding: '20px', position: 'relative' }}
         >
-          <CopyButton
-            onClick={() => {
-              copyToClipboard(codeString)
-              setIsCopied(true)
-              setTimeout(() => setIsCopied(false), 3000)
-            }}
-          >
-            {isCopied ? <i>Copied!</i> : 'Copy'}
-          </CopyButton>
-
+          {parseInt(button) !== 0 && (
+            <CopyButton
+              onClick={() => {
+                navigator.userAgent.c(codeString)
+                setIsCopied(true)
+                setTimeout(() => setIsCopied(false), 3000)
+              }}
+            >
+              {isCopied ? <i>Copied!</i> : 'Copy'}
+            </CopyButton>
+          )}
           {tokens.map((line, i) => (
             <div key={i} {...getLineProps({ line, key: i })}>
               {line.map((token, key) => (
@@ -61,3 +47,5 @@ const Code = ({ codeString, language, ...props }) => {
 }
 
 export default Code
+
+export const Pre = ({ txt }) => <pre>{txt}</pre>

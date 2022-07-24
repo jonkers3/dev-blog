@@ -17,7 +17,6 @@ This is an example of how to bootstrap a new blog with Gatsby in 2022.
 
 We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_.
 
-#### *`cli`*
 ```
 npx gatsby new
 ```
@@ -27,7 +26,7 @@ Run the CLI and follow the prompts.
 What kind of styling, what plugins, typescript or not, that sort of thing. We selected MDX support, responsive images, and React Helmet. For styling we're going to be use standard CSS modules. This generated the following gatsby-config.ts file for us:
 
 #### *`gatsby-config.ts`*
-```typescript
+```typescript file=gatsby-config.ts
 import type { GatsbyConfig } from 'gatsby'
 
 const config: GatsbyConfig = {
@@ -163,7 +162,7 @@ npm start
 
 At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically this is just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from (like our `blog` folder). We use the UI to develop the queries we need to power our site.
 
-Try running the following query while our `blog` folder is still empty:
+For example, this query is basically what we will run to get the data to generate the index page. Try running this query while the `blog` folder is still empty:
 
 ```graphql
 query BlogPosts {
@@ -184,11 +183,11 @@ query BlogPosts {
 }
 ```
 
-GraphQL will throws an error: `Value "frontmatter___date" does not exist in "MdxFieldsEnum" enum`. We can fix this by placing at least [one MDX file](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) that _does_ have a date field in our `blog` folder.
+GraphQL will throw an error: `Value "frontmatter___date" does not exist in "MdxFieldsEnum" enum`. The GraphQL query basically says `ORDER BY frontmatter___date`, and `frontmatter___date` doesn't exist in the GQL schema.
 
-But what _exactly_ is going on here_?
+If `frontmatter___date` _did_ exist in any of our MDX files, it would be _added_ to the schema dynamically.
 
-If we really wanted to, we could add the following code to our gatsby-node file, and the query would return an empty result set instead of erroring.
+If we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this.
 
 #### *`gatsby-node.ts`*
 ```javascript
@@ -206,7 +205,9 @@ exports.createSchemaCustomization = ({ actions }) => {
 }
 ```
 
-But we don't plan on having an empty blog or markdown files with inconsistent metadata, so it isn't really necessary, but it does illuminate a bit how GraphQL queries work with frontmatter in Gatsby.
+This isn't necessary because we don't plan on having an empty blog or inconsistent metadata in our MDX files. It is mentioned simply to shed some light on how GraphQL queries work with frontmatter in Gatsby.
+
+In any case, we need at least [one MDX file with a date](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) to exist in our blog folder. And it needs to be in a _subfolder_ of blog, as that is how we generate the slug.
 
 To create our index page, replace the contents of `src/pages/index.js` file with the following:
 
@@ -251,14 +252,14 @@ export const query = graphql`
 export default Blog
 ```
 
-Obviously there is some kind of magic going on here. Gatsby takes the results of the `query` that gets exported and passes them right back into the component as a prop called `data`. GraphQL is perfect for this. Because the shape of the query is the shape of the data structure we are dereferencing in our component as we list out the posts.
+Obviously there is some kind of magic going on here. Gatsby takes the results of the `query` that gets exported, and passes them into the component as a prop called `data`. We can see the shape of the data structure we are dereferencing in our component because it is the same shape as the query. GraphQL is great here also in that it  resembles ES6, making it all feel even more congruent.
 
 <br/>
 
 ## 4. Create a Template for Blog Posts
 ---
 
-There should now be a list of posts at [localhost:8000](http://localhost:8000). Now that we have an index page, we probably want to be able to see individual posts as well. We just need a file to serve as our blog template:
+Now that we have an index page, we want to be able to see the individual posts as well. We need a file to serve as our blog template:
 
 #### *`src/pages/{mdx.slug}.js`*
 ```jsx
@@ -495,7 +496,7 @@ const Code = ({ codeString, language, ...props }) => {
 export default Code
 ```
 
-### Use MDXProvider wrap MDXRenderer
+### Wrap MDXRenderer with provider
 
 #### *`src/pages/{mdx.slug}.js`*
 ```jsx
