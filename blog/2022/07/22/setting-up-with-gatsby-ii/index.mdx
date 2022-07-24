@@ -3,29 +3,24 @@ title: Deploying a Gatsby Dev Blog on Github Pages
 date: 2022-07-22
 ---
 
-# Deploying Our New Dev Blog
+# Deploying Our New Gatsby Dev Blog
 
 Today we will deploying the new Gatsby-based dev blog that we worked through setting up [here](/2022/07/20/setting-up-with-gatsby/).
 
-<br/>
+Today, we will just deploy to Github Pages, mostly just because it is free and probably easy to set up.
 
-## 1. We Want Easy Deployment
----
-
-Initially, we will just deploy to Github Pages. For today, the main concern is just getting something up there that we can easily add content and deploy changes to. So we will now head over to Github and do just that.
+Our goal at the moment is to get something up that we can easily add content and deploy changes to. So we will now head over to Github and do just that.
 
 <br/>
 
-## 2. Setup a repository on Github
+## 1. Setup Github Repo and SSH
 ---
 
-Create yourself a new, empty repository on [Github](https://github.com/new).
-
-The Gatsby CLI should have initialized a git repository for us at the very beginning. Setting up SSH access to Github will things much easier:
+Create yourself a new, empty repository on [Github](https://github.com/new). Locally, the Gatsby CLI should already have initialized a git repository for us. If not, `git init`.
 
 ### Create an SSH key (with your own email)
 ```sh
-ssh-keygen -t ed25519 -C 'me@my-email.com'
+ssh-keygen -t ed25519 -C 'your@own-email.com'
 
 eval "$(ssh-agent -s)"
 
@@ -50,10 +45,14 @@ Now, we can just commit our changes and `git push`, and our code with go straigh
 
 <br/>
 
-## 3. Setup Github Pages
+## 2. Configure Github Pages
 ---
 
-Gatsby is not the default for Github Pages, but it can still work. [Github Pages Action](https://github.com/marketplace/actions/github-pages-action) is just the sort of thing we are looking for, and the only thing we need to do to leverage it is create a yml file. This is a slightly modified version of the example they give for Gatsby:
+On the settings page for your Github repository, make sure that branch is set to `gh-pages` and that selected folder is `root`, like this:
+
+![](github-pages-settings.png)
+
+Gatsby is not the default for Github Pages, but it can still work, and [Github Pages Action](https://github.com/marketplace/actions/github-pages-action) looks like just the sort of thing that might make this easy. The only thing we need to do to leverage it is create the following yml file, which is a slightly modified version of the Gatsby example provided in their docs:
 
 #### `.github/workflows/gh-pages.yml`
 ```yml
@@ -99,41 +98,29 @@ jobs:
           publish_dir: ./public
 ```
 
-On the settings page for your Github repository, make sure that branch is set to `gh-pages` and that selected folder is `root`; it should look like this:
-
-![](github-pages-settings.png)
-
-Once those things are setup correctly, that should be it. Pushing changes to Github (`git push`) will trigger the workflow, and the process will culminate in the new version of our site being deployed to Github Pages.
+Once those things are setup correctly, that should be it. When the master branch is updated on Github (as in when you call `git push`), it will trigger the workflow, and the process will culminate in a new version of our site being deployed to Github Pages.
 
 <br/>
 
-## 4. Update gatsby-config to fix images
+## 3. Update gatsby-config with path prefix
 ---
 
-Due to the nature of our Github Pages setup, we need to make the following change to ensure that all of our images and links are working right. The value for our pathPrefix is, of course, the name of the Github repository. Add the pathPrefix to your config:
+Due to the nature of our Github Pages setup which entails our site root located in a subfolder, we need to make the one more change to ensure that all of our images and links are working right in the pages Gatsby generates. The value for our pathPrefix is, of course, the name of the Github repository. Add the pathPrefix to your config:
 
 #### *`gatsby-config.ts`*
 ```javascript
   pathPrefix: 'dev-blog',
 ```
 
-At this point, the extra `blog` in our URL is redundant, so let's get rid of it. We can just move the files in the `src/pages/blog` folder into `src/pages`.
-
-#### *`src/pages/index.js`*
-```sh
-mv src/pages/blog/index.js src/pages/index.js
-mv src/pages/blog/{mdx.slug}.js src/pages/{mdx.slug}.js
-```
-
-This effectively just makes our blog the index page of our site, and our URL is cleaner.
-
 <br/>
 
-## 6. Commit changes and push to Github
+## 4. Commit changes and push to Github
 ---
+
+Push the rest of your changes and things should be good to go.
 
 ```sh
 git commit -a -u -m 'initial deploy' && git push
 ```
 
-At this point, your blog should be looking good on Github Pages. For now, we're up here: [https://jonkers3.github.io/dev-blog](https://jonkers3.github.io/dev-blog).
+At this point, the blog should be looking good on Github Pages.
