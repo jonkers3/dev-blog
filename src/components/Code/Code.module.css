@@ -3,8 +3,18 @@
   top: 0;
   right: 0;
   margin: 8px;
-  padding: 8px 12px 8px 12px;
+  /* padding: 8px 12px 8px 12px; */
   border-radius: 8px;
-  border-width: 0;
   background: deepskyblue;
+
+  margin-right: 1rem;
+  margin-top: 1rem;
+  padding: 8px 12px;
+  /* background: #00f5c426; */
+  border: none;
+  cursor: pointer;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1;
 }
