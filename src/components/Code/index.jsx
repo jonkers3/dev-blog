@@ -25,7 +25,7 @@ const Code = ({ button, codeString, language, ...props }) => {
           {parseInt(button) !== 0 && (
             <CopyButton
               onClick={() => {
-                navigator.userAgent.c(codeString)
+                navigator.clipboard.writeText(codeString)
                 setIsCopied(true)
                 setTimeout(() => setIsCopied(false), 3000)
               }}
