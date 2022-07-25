@@ -2,10 +2,10 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin: 16px;
+  margin: 12px;
   border-radius: 8px;
   background: deepskyblue;
-  padding: 7px;
+  padding: 6px;
   border: none;
   cursor: pointer;
   color: #e2e8f0;
@@ -20,12 +20,12 @@
 }
 
 .line:before {
-  content: attr(data-line-number) '    ';
+  content: attr(data-prepend) attr(data-line-number) '    ';
   font-size: smaller;
 }
 
 .no-indent:before {
-  content: attr(data-line-number) '';
+  content: attr(data-prepend) attr(data-line-number);
 }
 
 .highlight-line,
@@ -101,7 +101,7 @@
 }
 
 .component pre {
-  min-height: 60px;
+  min-height: 50px;
   background: '#fff';
 }
 

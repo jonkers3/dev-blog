@@ -17,7 +17,7 @@ const CopyButton = (props) => {
       {!isCopied ? (
         <span>
           <br />
-          Copy
+          {/* Copy */}
         </span>
       ) : (
         <i>
@@ -29,7 +29,7 @@ const CopyButton = (props) => {
   )
 }
 
-const calculateLinesToHighlight = (raw) => {
+const calculateLines = (raw) => {
   if (raw) {
     const lineNumbers = rangeParser(raw)
     return lineNumbers
@@ -47,6 +47,7 @@ const Code = ({
   add,
   remove,
   output,
+  command,
   start = 0
 }) => {
   const isTerminal = !!output || language === 'sh'
@@ -55,10 +56,11 @@ const Code = ({
 
   const showLineNums = parseInt(start) > 0
 
-  const highlighted = calculateLinesToHighlight(highlight)
-  const adding = calculateLinesToHighlight(add)
-  const removing = calculateLinesToHighlight(remove)
-  const excluding = calculateLinesToHighlight(exclude)
+  const highlighted = calculateLines(highlight)
+  const adding = calculateLines(add)
+  const removing = calculateLines(remove)
+  const excluding = calculateLines(exclude)
+  const commands = calculateLines(command)
 
   const copyExclude = removing + excluding
 
@@ -106,7 +108,7 @@ const Code = ({
                   onClick={() => {
                     navigator.clipboard.writeText(copyString)
                     setIsCopied(true)
-                    setTimeout(() => setIsCopied(false), 1111)
+                    setTimeout(() => setIsCopied(false), 4000)
                   }}
                   isCopied={isCopied}
                 />
@@ -127,6 +129,14 @@ const Code = ({
                       highlighted.includes(i + 1)
                   })}
                   data-line-number={getLineNumber(i)}
+                  data-prepend={
+                    !isTerminal
+                      ? ''
+                      : codeString.split('\n').length === 1 ||
+                        commands.includes(i + 1)
+                      ? '$ │   '
+                      : '  │   '
+                  }
                 >
                   {line.map((token, key) => (
                     <span key={key} {...getTokenProps({ token, key })} />
