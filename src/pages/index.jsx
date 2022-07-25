@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { graphql, Link } from 'gatsby'
-import Layout from '@components/Layout'
 
 const BlogPage = ({ data }) => {
   return (

@@ -3,28 +3,22 @@ import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
 import rangeParser from 'parse-numeric-range'
 import { clsx } from 'clsx'
-import * as styles from './Code.module.css'
+import { If } from '@components/Utils'
 import Clipboard from '@assets/icon.svg'
-import 'prismjs/plugins/command-line/prism-command-line.css'
+import * as styles from './Code.module.css'
 
 const CopyButton = (props) => {
   const { isCopied, ...rest } = props
 
   return (
     <button className={styles.button} {...rest}>
-      {' '}
       <Clipboard title='Copy' />
-      {!isCopied ? (
-        <span>
-          <br />
-          {/* Copy */}
-        </span>
-      ) : (
+      <If condition={isCopied}>
         <i>
           <br />
           Copied!
         </i>
-      )}
+      </If>
     </button>
   )
 }
@@ -104,36 +98,46 @@ const Code = ({
                   isCopied={isCopied}
                 />
               )}
-              {tokens.map((line, i) => (
-                <div
-                  key={i}
-                  {...getLineProps({ line, key: i })}
-                  className={clsx({
-                    [styles.line]: true,
-                    [styles.noIndent]:
-                      !showLineNums && adding.length < 1 && removing.length < 1,
-                    [styles.addLine]: adding.includes(i + 1),
-                    [styles.removeLine]: removing.includes(i + 1),
-                    [styles.highlightLine]:
-                      adding.includes(i + 1) ||
-                      removing.includes(i + 1) ||
-                      highlighted.includes(i + 1)
-                  })}
-                  data-line-number={getLineNumber(i)}
-                  data-prepend={
-                    !isTerminal
-                      ? ''
-                      : codeString.split('\n').length === 1 ||
-                        commands.includes(i + 1)
+              {tokens.map((line, i) => {
+                let props = {}
+
+                if (isTerminal) {
+                  props['data-prepend'] =
+                    codeString.split('\n').length === 1 ||
+                    commands.includes(i + 1)
                       ? '$ │   '
                       : '  │   '
-                  }
-                >
-                  {line.map((token, key) => (
-                    <span key={key} {...getTokenProps({ token, key })} />
-                  ))}
-                </div>
-              ))}
+                }
+
+                if (showLineNums) {
+                  props['data-line-number'] = getLineNumber(i)
+                }
+
+                return (
+                  <div
+                    key={i}
+                    {...getLineProps({ line, key: i })}
+                    className={clsx({
+                      [styles.line]: true,
+                      [styles.noIndent]:
+                        !showLineNums &&
+                        adding.length < 1 &&
+                        removing.length < 1,
+                      [styles.addLine]: adding.includes(i + 1),
+                      [styles.removeLine]: removing.includes(i + 1),
+                      [styles.highlightLine]:
+                        adding.includes(i + 1) ||
+                        removing.includes(i + 1) ||
+                        highlighted.includes(i + 1)
+                    })}
+                    {...props}
+                  >
+                    {line.map((token, key) => (
+                      <span key={key} {...getTokenProps({ token, key })} />
+                    ))}
+                  </div>
+                )
+              })}
               {isTerminal && output && (
                 <div>
                   <hr />
@@ -149,5 +153,3 @@ const Code = ({
 }
 
 export default Code
-
-export const Pre = ({ txt }) => <pre>{txt}</pre>

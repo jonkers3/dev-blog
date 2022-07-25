@@ -2,14 +2,34 @@ import * as React from 'react'
 import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
-import { preToCodeBlock } from 'mdx-utils'
 import Code from '@components/Code'
-import Layout from '@components/Layout'
 
 const components = {
   pre: (preProps) => {
-    const props = preToCodeBlock(preProps)
-    return props ? <Code {...props} /> : <pre {...preProps} />
+    if (
+      preProps.children &&
+      preProps.children.props &&
+      preProps.children.props.mdxType === 'code'
+    ) {
+      const {
+        children: codeString,
+        className = '',
+        ...props
+      } = preProps.children.props
+
+      const match = className.match(/language-([\0-\uFFFF]*)/)
+
+      return (
+        <Code
+          {...props}
+          codeString={codeString.trim()}
+          className={className}
+          language={match != null ? match[1] : ''}
+        />
+      )
+    }
+
+    return <pre {...preProps} />
   }
 }
 
