@@ -2,19 +2,111 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin: 8px;
-  /* padding: 8px 12px 8px 12px; */
+  margin: 16px;
   border-radius: 8px;
   background: deepskyblue;
-
-  margin-right: 1rem;
-  margin-top: 1rem;
-  padding: 8px 12px;
-  /* background: #00f5c426; */
+  padding: 7px;
   border: none;
   cursor: pointer;
   color: #e2e8f0;
   font-size: 14px;
   font-family: sans-serif;
-  line-height: 1;
+}
+
+.button svg {
+  height: 24px;
+  width: 24px;
+  margin: 6px;
+}
+
+.line:before {
+  content: attr(data-line-number) '    ';
+  font-size: smaller;
+}
+
+.no-indent:before {
+  content: attr(data-line-number) '';
+}
+
+.highlight-line,
+.add-line,
+.remove-line {
+  background: #a2bab526;
+}
+
+.remove-line span {
+  text-decoration: line-through;
+  opacity: 0.75;
+}
+
+.add-line:before {
+  content: attr(data-line-number) ' +  ';
+  color: green;
+  font-size: smaller;
+}
+
+.remove-line:before {
+  content: attr(data-line-number) ' -  ';
+  font-weight: bold;
+  color: red;
+  font-size: smaller;
+}
+
+.filename {
+  display: flex;
+  color: #fff;
+  font-family: 'Montserrat';
+  font-style: italic;
+  font-size: 1.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  background-color: dodgerblue;
+  padding: 4px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.language {
+  display: flex;
+  color: #fff;
+  text-transform: uppercase;
+  font-family: 'Montserrat';
+  font-weight: bold;
+  border: 1px solid black;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px;
+  padding: 2px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: blue;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.component {
+  background: darkblue;
+  border-radius: 0.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding: 6px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.component pre {
+  min-height: 60px;
+  background: '#fff';
+}
+
+.code-container {
+  overflow: auto;
+  background: #011627;
+  border-radius: 0.5rem;
 }

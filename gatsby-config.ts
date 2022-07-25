@@ -11,6 +11,7 @@ const config: GatsbyConfig = {
   graphqlTypegen: true,
 
   plugins: [
+    'gatsby-plugin-react-svg',
     'gatsby-plugin-image',
     'gatsby-plugin-react-helmet',
     {

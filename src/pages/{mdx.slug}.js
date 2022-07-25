@@ -9,12 +9,7 @@ import Layout from '@components/Layout'
 const components = {
   pre: (preProps) => {
     const props = preToCodeBlock(preProps)
-
-    if (props) {
-      return <Code {...props} />
-    } else {
-      return <pre {...preProps} />
-    }
+    return props ? <Code {...props} /> : <pre {...preProps} />
   }
 }
 

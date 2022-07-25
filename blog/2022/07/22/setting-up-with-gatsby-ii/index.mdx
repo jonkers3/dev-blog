@@ -56,8 +56,8 @@ On the settings page for your Github repository, make sure that branch is set to
 
 Gatsby is not the default for Github Pages, but it can still work, and [Github Pages Action](https://github.com/marketplace/actions/github-pages-action) looks like just the sort of thing that might make this easy. The only thing we need to do to leverage it is create the following yml file, which is a slightly modified version of the Gatsby example provided in their docs:
 
-#### `.github/workflows/gh-pages.yml`
-```yml
+
+```yml file=.github/workflows/gh-pages.yml
 name: GitHub Pages
 
 on:
@@ -110,7 +110,7 @@ Once those things are setup correctly, that should be it. When the master branch
 Due to the nature of our Github Pages setup which entails our site root located in a subfolder, we need to make the one more change to ensure that all of our images and links are working right in the pages Gatsby generates. The value for our pathPrefix is, of course, the name of the Github repository. Add the pathPrefix to your config:
 
 #### *`gatsby-config.ts`*
-```javascript
+```js file=gatsby-config.ts
   pathPrefix: 'dev-blog',
 ```
 
@@ -125,4 +125,4 @@ Push the rest of your changes and things should be good to go.
 git commit -a -u -m 'initial deploy' && git push
 ```
 
-At this point, the blog should be looking good on Github Pages. Top be honest, I was expecting it to take a little more time and effort
+It turns out to be as easy as that. At this point, the blog should be looking good on Github Pages. Have fun.
