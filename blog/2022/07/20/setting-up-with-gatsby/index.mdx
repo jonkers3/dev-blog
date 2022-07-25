@@ -1,6 +1,7 @@
 ---
 title: Setting Up a Dev Blog With Gatsby in 2022
 date: 2022-07-20
+tags: ['Gatsby', 'Guides', 'React']
 ---
 
 # Setting Up a Dev Blog with Gatsby in 2022
@@ -26,7 +27,11 @@ npx gatsby new
 
 Run the CLI and follow the prompts.
 
-What kind of styling, what plugins, typescript or not, that sort of thing. We selected MDX support, responsive images, and React Helmet. For styling we're going to be use standard CSS modules. This generated the following gatsby-config.ts file for us:
+What kind of styling, what plugins, typescript or not, that sort of thing.
+
+We selected MDX support, responsive images, and React Helmet. For styling, we're going to use CSS modules.
+
+This generates some files. The first one to know about is the gatsby-config file:
 
 #### *`gatsby-config.ts`*
 ```typescript file=gatsby-config.ts
@@ -69,6 +74,8 @@ const config: GatsbyConfig = {
 
 export default config
 ```
+
+For initial setup, there are a few nice things to do, like:
 
 Set up an alias for our components directory so we can use absolute imports:
 
@@ -156,8 +163,11 @@ Our file system will also determine the URL of our post, so the way we organize 
 
 Start the development server...
 
-```sh
+```sh command=1
 npm start
+
+  > dev-blog@1.0.0 start
+  > gatsby develop -o -p 8000
 ```
 
 At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically this is just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from (like our `blog` folder). We use the UI to develop the queries we need to power our site.

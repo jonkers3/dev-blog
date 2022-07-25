@@ -55,7 +55,7 @@
 .filename {
   display: flex;
   color: #fff;
-  font-family: 'Montserrat';
+  font-family: 'Roboto';
   font-style: italic;
   font-size: 1.25rem;
   display: flex;
@@ -103,6 +103,12 @@
 .component pre {
   min-height: 50px;
   background: '#fff';
+
+  position: relative;
+  padding: 20px;
+  padding-top: 29px;
+  margin: 0;
+  background: #000;
 }
 
 .code-container {

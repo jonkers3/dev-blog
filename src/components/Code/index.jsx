@@ -93,16 +93,7 @@ const Code = ({
           theme={theme}
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre
-              className={className}
-              style={{
-                ...style,
-                position: 'relative',
-                padding: '20px',
-                margin: 0,
-                background: '#000'
-              }}
-            >
+            <pre>
               {parseInt(copy) !== 0 && (
                 <CopyButton
                   onClick={() => {

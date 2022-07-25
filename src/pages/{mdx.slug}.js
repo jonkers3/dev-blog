@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { graphql } from 'gatsby'
+import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
 import { preToCodeBlock } from 'mdx-utils'
@@ -14,8 +14,16 @@ const components = {
 }
 
 const BlogPost = ({ data }) => {
+  debugger
   return (
     <Layout>
+      <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {data.mdx.frontmatter.tags.map((tag) => (
+          <li style={{ margin: 8, listStyle: 'none' }}>
+            <Link to={`/tags/${tag}`}>{tag}</Link>
+          </li>
+        ))}
+      </ul>
       <MDXProvider components={components}>
         <p>{data.mdx.frontmatter.date}</p>
         <MDXRenderer>{data.mdx.body}</MDXRenderer>
@@ -30,6 +38,7 @@ export const query = graphql`
       frontmatter {
         title
         date(formatString: "MMMM D, YYYY")
+        tags
       }
       body
     }
