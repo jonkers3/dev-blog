@@ -38,7 +38,6 @@ const config: GatsbyConfig = {
       },
       __key: 'images'
     },
-
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -47,7 +46,6 @@ const config: GatsbyConfig = {
       },
       __key: 'pages'
     },
-
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -55,6 +53,13 @@ const config: GatsbyConfig = {
         path: './blog/'
       },
       __key: 'blog'
+    },
+
+    {
+      resolve: 'gatsby-plugin-released',
+      options: {
+        force: false
+      }
     }
   ]
 }

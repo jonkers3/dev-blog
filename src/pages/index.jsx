@@ -4,7 +4,7 @@ import Layout from '@components/Layout'
 
 const BlogPage = ({ data }) => {
   return (
-    <Layout>
+    <>
       {data.allMdx.nodes.map((node) => (
         <article key={node.id}>
           <h2>
@@ -14,13 +14,16 @@ const BlogPage = ({ data }) => {
           <p>{node.slug}</p>
         </article>
       ))}
-    </Layout>
+    </>
   )
 }
 
 export const query = graphql`
   query {
-    allMdx(sort: { fields: frontmatter___date, order: DESC }) {
+    allMdx(
+      sort: { fields: frontmatter___date, order: DESC }
+      filter: { fields: { released: { eq: true } } }
+    ) {
       nodes {
         frontmatter {
           date(formatString: "MMMM D, YYYY")

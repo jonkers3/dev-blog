@@ -16,7 +16,7 @@ const components = {
 const BlogPost = ({ data }) => {
   debugger
   return (
-    <Layout>
+    <>
       <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
         {data.mdx.frontmatter.tags.map((tag) => (
           <li style={{ margin: 8, listStyle: 'none' }}>
@@ -28,7 +28,7 @@ const BlogPost = ({ data }) => {
         <p>{data.mdx.frontmatter.date}</p>
         <MDXRenderer>{data.mdx.body}</MDXRenderer>
       </MDXProvider>
-    </Layout>
+    </>
   )
 }
 

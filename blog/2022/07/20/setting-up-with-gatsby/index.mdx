@@ -16,7 +16,7 @@ This is an example of how to bootstrap a new blog with Gatsby in 2022.
 ## 1. Bootstrapping a new Gatsby Project
 ---
 
-We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_.
+We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_ :
 
 ```sh image=init.png
 npx gatsby new
@@ -31,9 +31,8 @@ What kind of styling, what plugins, typescript or not, that sort of thing.
 
 We selected MDX support, responsive images, and React Helmet. For styling, we're going to use CSS modules.
 
-This generates some files. The first one to know about is the gatsby-config file:
+This generates some files. The first one to know about is the `gatsby-config.js/ts` file :
 
-#### *`gatsby-config.ts`*
 ```typescript file=gatsby-config.ts
 import type { GatsbyConfig } from 'gatsby'
 
@@ -77,7 +76,7 @@ export default config
 
 For initial setup, there are a few nice things to do, like:
 
-Set up an alias for our components directory so we can use absolute imports:
+Set up an alias for our components directory so we can use absolute imports :
 
 ```js file=gatsby-node.js
 const path = require('path')
@@ -103,7 +102,7 @@ Typescript users will want to update their ts-config with the alias as well:
     ...
 ```
 
-If your setup is like mine, you're using Typescript with plain CSS modules for styling. If this is the case, you'll probably need a  definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports.
+If your setup is like mine, you're using Typescript with plain CSS modules for styling. If this is the case, you'll probably need a  definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
 
 ```typescript file=src/global.d.ts.ts
 declare module '*.css' {
@@ -121,7 +120,7 @@ Make a folder called `blog` in the project root. This is where we will keep the 
 
 We tell Gatsby about this ```blog``` folder by adding one more item at the bottom of the ```plugins``` array in our `gatsby-config`, just below the other `gatsby-source-filesystem definitions`.
 
-In effect, this simply makes the files in the `blog` folder visible to our GraphQL queries.
+In effect, this simply makes the files in the `blog` folder visible to our GraphQL queries :
 
 ```js file=gatsby-config.ts exclude=1-3,12 add=4-11
 plugins: [
@@ -140,7 +139,7 @@ plugins: [
 
 As far as the posts themselves, as in the mdx files, we will organize them by date in subfolders. The mdx source behind this post is located in our filesystem at `blog/2022/07/20/setting-up-with-gatsby/index.mdx`, for example.
 
-Our file system will also determine the URL of our post, so the way we organize our files is extremely important. This folder structure that we want is basically this:
+Our file system will also determine the URL of our post, so the way we organize our files is extremely important. This folder structure that we want is this :
 
 ```none copy=0
 📦blog
@@ -172,7 +171,7 @@ npm start
 
 At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically this is just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from (like our `blog` folder). We use the UI to develop the queries we need to power our site.
 
-For example, this query is basically what we will run to get the data to generate the index page. Try running this query while the `blog` folder is still empty:
+For example, this query is basically what we will run to get the data to generate the index page. Try running this query while the `blog` folder is still empty :
 
 ```graphql
 query BlogPosts {
@@ -200,7 +199,7 @@ GraphQL will throw an error: `Value "frontmatter___date" does not exist in "MdxF
 
 If `frontmatter___date` _did_ exist in any of our MDX files, it would be _added_ to the schema dynamically.
 
-If we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this.
+If we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this :
 
 ```js file=gatsby-node.js
 exports.createSchemaCustomization = ({ actions }) => {
@@ -223,7 +222,7 @@ In any case, we need at least [one MDX file with a date](https://raw.githubuserc
 
 ![](mdx-gql.png)
 
-To create our index page, replace the contents of `src/pages/index.js` file with the following:
+To create our index page, replace the contents of `src/pages/index.js` file with the following :
 
 ```jsx file=src/pages/index.js
 import * as React from 'react'
@@ -272,7 +271,7 @@ Obviously there is some kind of magic going on here. Gatsby takes the results of
 ## 4. Create a Template for Blog Posts
 ---
 
-Now that we have an index page, we want to be able to see the individual posts as well. We need a file to serve as our blog template:
+Now that we have an index page, we want to be able to see the individual posts as well. We need a file to serve as our blog template :
 
 ```jsx file=src/pages/{mdx.slug}.js
 import * as React from 'react'
@@ -312,7 +311,7 @@ Now, we should be able to click the links on the index page and be brought to a 
 
 The main thing we are in need of is some kind of navigation control. Eventually we need a header, footer, and that sort of thing. Getting our content nicely centered would also be nice.
 
-We will create a shared Layout component to address these things.
+We will create a shared Layout component to address these things :
 
 ```jsx file=src/components/Layout/index.jsx
 import React from 'react'
@@ -358,7 +357,7 @@ export default Layout
 }
 ```
 
-Speaking of styles, let's also make a global CSS file for rules that need to apply everywhere.
+Speaking of styles, let's also make a global CSS file for rules that need to apply everywhere :
 
 ```css file=src/styles/global.css
 body {
@@ -376,7 +375,7 @@ That needs to be referenced by a gatsby-browser file, so create one:
 import './src/styles/global.css'
 ```
 
-Wrap our two pages so that they are using our new layout component.
+We _could_ wrap our two pages so that they are using our new layout component, like this :
 
 ```jsx file=src/pages/{mdx.slug}.js add=1,6,9 remove=5,10 start=1
 import Layout from '@components/Layout'
@@ -414,6 +413,22 @@ const Blog = ({ data }) => {
   )
 }
 ```
+
+However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default by adding the following to `gatsby-browser.js` :
+
+```jsx file=gatsby-browser.js add=1-2,4-9
+import * as React from 'react'
+import Layout from '@components/Layout'
+import './src/styles/global.css'
+
+const wrapPageElement = ({ element, props }) => {
+  return <Layout {...props}>{element}</Layout>
+}
+
+export { wrapPageElement }
+
+```
+
 
 <br/>
 
@@ -637,4 +652,4 @@ We now drop markdown and image files into our blog folder and know that when our
 
 Markdown and React go _good_ together. Gatsby's data layer is a perfect use case for GraphQL. These things are really meant for each other, and it is not surprising that this stack is a popular way to build websites.
 
-For the [second part of this post](/2022/07/22/setting-up-with-gatsby-ii), we will concern ourselves with how it is that our app is going to be built and deployed. Then we will do it.
+For the [second part of this post](/2022/07/22/setting-up-with-gatsby-ii), we will concern ourselves with getting our new blog Gatsby blog deployed.

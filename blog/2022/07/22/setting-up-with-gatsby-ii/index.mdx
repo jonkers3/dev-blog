@@ -1,7 +1,7 @@
 ---
 title: Deploying a Gatsby Dev Blog on Github Pages
 date: 2022-07-22
-tags: ['Gatsby']
+tags: ['Gatsby', 'CI']
 ---
 
 # Deploying Our New Gatsby Dev Blog
@@ -108,11 +108,20 @@ Once those things are setup correctly, that should be it. When the master branch
 ## 3. Update gatsby-config with path prefix
 ---
 
-Due to the nature of our Github Pages setup which entails our site root located in a subfolder, we need to make the one more change to ensure that all of our images and links are working right in the pages Gatsby generates. The value for our pathPrefix is, of course, the name of the Github repository. Add the pathPrefix to your config:
+Due to the nature of our Github Pages setup which entails our site root located in a subfolder, we need to make the one more change to ensure that all of our images and links are working right in the pages Gatsby generates.
 
-#### *`gatsby-config.ts`*
+The value for our pathPrefix is, of course, the name of the Github repository. We don't need the path prefix in our development environment, so we can control whether it is set but using environment variable:
+
+```json file=package.json add=2 remove=4 exclude=1,5
+"scripts": {
+  "build": "PATH_PREFIX=/dev-blog gatsby build --prefix-paths",
+
+  "build": "gatsby build",
+},
+```
+
 ```js file=gatsby-config.ts
-  pathPrefix: 'dev-blog',
+  pathPrefix: process.env.PATH_PREFIX,
 ```
 
 <br/>
@@ -120,10 +129,10 @@ Due to the nature of our Github Pages setup which entails our site root located 
 ## 4. Commit changes and push to Github
 ---
 
-Push the rest of your changes and things should be good to go.
+It turns out to be as easy as that. Push the rest of your changes and things should be good to go.
 
 ```sh
 git add -A && git commit -a -m 'initial deploy' && git push
 ```
 
-It turns out to be as easy as that. At this point, the blog should be looking good on Github Pages. Have fun.
+At this point, the blog should be looking good on Github Pages. Have fun.
