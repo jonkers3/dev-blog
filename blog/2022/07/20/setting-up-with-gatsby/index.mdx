@@ -10,10 +10,11 @@ tags: ['Gatsby', 'Guides', 'React']
 
 # Setting Up a Dev Blog with Gatsby in 2022
 
-Today we will set up our new dev blog. We will build it with Gatsby. The initial goals are basic functionality (an index page with links to individual posts) and a few other things one would probably like given the need to work with a lot of code - syntax highlighting being one good example, copy-to-clipboard button another.  We will use markdown files for our content.
+Today we will set up our new dev blog. We will build it with Gatsby.
+
+The initial goals are just the basic functionality  of an index page with links to individual posts, and a few other things one would probably like given the need to work with a lot of code, like syntax highlighting and maybe copy-to-clipboard button.  We will be storing our content in markdown files.
 
 This is an example of how to bootstrap a new blog with Gatsby in 2022.
-
 
 <br/>
 
@@ -24,7 +25,6 @@ We could install `gatbsy-cli` globally or we can run it with NPX, but either way
 
 ```sh image=init.png
 npx gatsby new
-
 ```
 
 ![](init.png)
@@ -74,9 +74,9 @@ const config: GatsbyConfig = {
 export default config
 ```
 
-In terms of initial setup, there are a few nice things to do, like:
+In terms of initial setup, there are a few things we can do, like:
 
-Set up an alias for our components directory so we can use absolute imports (Typescript users will also need to update their `tsconfig.json`) :
+Setting up an alias for our components directory so we can use absolute imports (Typescript users will also need to update their `tsconfig.json`) :
 
 ```js file=gatsby-node.js
 const path = require('path')
@@ -100,7 +100,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     ...
 ```
 
-If your setup is like mine, and you're using Typescript + CSS modules. If this is the case, you'll probably need a  definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
+If your setup is like mine, and you're using Typescript + CSS modules, you'll probably need a definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
 
 ```typescript file=src/global.d.ts.ts
 declare module '*.css' {
