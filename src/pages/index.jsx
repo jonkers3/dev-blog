@@ -5,6 +5,13 @@ import Layout from '@components/Layout'
 const BlogPage = ({ data }) => {
   return (
     <>
+      <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        {data.allMdx.tags.map(({ tag }) => (
+          <li style={{ margin: 8, listStyle: 'none' }}>
+            <Link to={`/tags/${tag}`}>{tag}</Link>
+          </li>
+        ))}
+      </ul>
       {data.allMdx.nodes.map((node) => (
         <article key={node.id}>
           <h2>
@@ -32,6 +39,10 @@ export const query = graphql`
         tableOfContents
         slug
         id
+      }
+      tags: group(field: frontmatter___tags) {
+        tag: fieldValue
+        count: totalCount
       }
     }
   }

@@ -1,7 +1,11 @@
 ---
+
 title: Setting Up a Dev Blog With Gatsby in 2022
+
 date: 2022-07-20
+
 tags: ['Gatsby', 'Guides', 'React']
+
 ---
 
 # Setting Up a Dev Blog with Gatsby in 2022
@@ -25,13 +29,9 @@ npx gatsby new
 
 ![](init.png)
 
-Run the CLI and follow the prompts.
+Run the CLI and follow the prompts to choose your styling library, plugins, typescript or not, that sort of thing. This time we selected MDX support, responsive images, and React Helmet. For styling, we're going to use plain CSS modules.
 
-What kind of styling, what plugins, typescript or not, that sort of thing.
-
-We selected MDX support, responsive images, and React Helmet. For styling, we're going to use CSS modules.
-
-This generates some files. The first one to know about is the `gatsby-config.js/ts` file :
+The CLI will generate some files, and the first one to know about it is `gatsby-config.js/ts` :
 
 ```typescript file=gatsby-config.ts
 import type { GatsbyConfig } from 'gatsby'
@@ -74,9 +74,9 @@ const config: GatsbyConfig = {
 export default config
 ```
 
-For initial setup, there are a few nice things to do, like:
+In terms of initial setup, there are a few nice things to do, like:
 
-Set up an alias for our components directory so we can use absolute imports :
+Set up an alias for our components directory so we can use absolute imports (Typescript users will also need to update their `tsconfig.json`) :
 
 ```js file=gatsby-node.js
 const path = require('path')
@@ -91,8 +91,6 @@ exports.onCreateWebpackConfig = ({ actions }) => {
 }
 ```
 
-Typescript users will want to update their ts-config with the alias as well:
-
 ```json file=ts-config.json exclude=1,2,6
 {
   "compilerOptions": {
@@ -102,7 +100,7 @@ Typescript users will want to update their ts-config with the alias as well:
     ...
 ```
 
-If your setup is like mine, you're using Typescript with plain CSS modules for styling. If this is the case, you'll probably need a  definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
+If your setup is like mine, and you're using Typescript + CSS modules. If this is the case, you'll probably need a  definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
 
 ```typescript file=src/global.d.ts.ts
 declare module '*.css' {
@@ -195,11 +193,11 @@ query BlogPosts {
 }
 ```
 
-GraphQL will throw an error: `Value "frontmatter___date" does not exist in "MdxFieldsEnum" enum`. The GraphQL query basically says `ORDER BY frontmatter___date`, and `frontmatter___date` doesn't exist in the GQL schema.
+What happens is that GraphQL will throw an error: `Value "frontmatter___date" does not exist in "MdxFieldsEnum" enum`, because our query basically says `ORDER BY frontmatter___date`, which doesn't exist in the GQL schema.
 
-If `frontmatter___date` _did_ exist in any of our MDX files, it would be _added_ to the schema dynamically.
+If we had any files with `frontmatter___date` set, it would have been added to the schema dynamically. If not, GraphQL has no way of knowing that it exists.
 
-If we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this :
+However, if we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this :
 
 ```js file=gatsby-node.js
 exports.createSchemaCustomization = ({ actions }) => {
@@ -216,13 +214,15 @@ exports.createSchemaCustomization = ({ actions }) => {
 }
 ```
 
-This isn't necessary because we don't plan on having an empty blog or inconsistent metadata in our MDX files. It is mentioned simply to shed some light on how GraphQL queries work with frontmatter in Gatsby.
+This isn't necessary because we don't plan on having an empty blog or inconsistent metadata in our MDX files. It is mentioned just to clarify how GraphQL queries are working with frontmatter in Gatsby.
 
-In any case, we need at least [one MDX file with a date](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) to exist in our blog folder.
+In any case, we need at least [one MDX file with a date](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) to exist in our blog folder before we can continue. Once we have that, our query should work :
 
 ![](mdx-gql.png)
 
-To create our index page, replace the contents of `src/pages/index.js` file with the following :
+<br/>
+
+Now, to create our index page, replace the contents of `src/pages/index.js` file with the following :
 
 ```jsx file=src/pages/index.js
 import * as React from 'react'
@@ -264,14 +264,16 @@ export const query = graphql`
 export default Blog
 ```
 
-Obviously there is some kind of magic going on here. Gatsby takes the results of the `query` that gets exported, and passes them into the component as a prop called `data`. We can see the shape of the data structure we are dereferencing in our component because it is the same shape as the query. GraphQL is great here also in that it  resembles ES6, making it all feel even more congruent.
+As you have probably noticed, there is some kind of extra something going on here. It's true. Gatsby works a bit of magic, taking the results of the exported `query` and then passing it into the component as a prop called `data`.
+
+It is a super-simple pattern where each page component has a query right alongside it, and the fact that GQL syntax resembles ES6 makes it even better, as the shape of the object we are deferencing in our component is made plainly evident just by glancing at the GQL query.
 
 <br/>
 
 ## 4. Create a Template for Blog Posts
 ---
 
-Now that we have an index page, we want to be able to see the individual posts as well. We need a file to serve as our blog template :
+Create a blog post template :
 
 ```jsx file=src/pages/{mdx.slug}.js
 import * as React from 'react'
@@ -301,6 +303,8 @@ export const query = graphql`
 
 export default BlogPost
 ```
+
+The `{mdx.slug}` in the filename will be automatically expanded to the value returned by the query. For example: `2022/07/20/setting-up-with-gatsby/`
 
 Now, we should be able to click the links on the index page and be brought to a page with the full content of the post.
 
@@ -426,9 +430,7 @@ const wrapPageElement = ({ element, props }) => {
 }
 
 export { wrapPageElement }
-
 ```
-
 
 <br/>
 
@@ -440,7 +442,7 @@ Storing image files directly alongside the markdown files is obviously ideal in 
 We want to be able to reference images in our Markdown files like this:
 
 ```markdown
-# Cool Mdx
+## I ❤️ Mdx
 
 ![Alt Text](hello.png)
 ```
