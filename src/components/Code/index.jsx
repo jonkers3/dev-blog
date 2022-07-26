@@ -23,13 +23,7 @@ const CopyButton = (props) => {
   )
 }
 
-const calculateLines = (raw) => {
-  if (raw) {
-    const lineNumbers = rangeParser(raw)
-    return lineNumbers
-  }
-  return []
-}
+const extractMetadata = (raw) => rangeParser(String(raw)) ?? []
 
 const Code = ({
   exclude,
@@ -48,36 +42,30 @@ const Code = ({
 
   const [isCopied, setIsCopied] = React.useState(false)
 
-  const showLineNums = parseInt(start) > 0
+  const highlighted = extractMetadata(highlight)
+  const adding = extractMetadata(add)
+  const removing = extractMetadata(remove)
+  const excluding = extractMetadata(exclude)
+  const commands = extractMetadata(command)
 
-  const highlighted = calculateLines(highlight)
-  const adding = calculateLines(add)
-  const removing = calculateLines(remove)
-  const excluding = calculateLines(exclude)
-  const commands = calculateLines(command)
+  const allHighlighted = adding + removing + highlighted
+
+  const showLineNums = parseInt(start) > 0
+  const hideGutter = !showLineNums && adding.length < 1 && removing.length < 1
 
   const copyExclude = removing + excluding
-
-  const copyString = copyExclude.length
-    ? codeString
-        .split('\n')
-        .filter((x, i) => copyExclude.indexOf(i + 1) === -1)
-        .join('\n')
-    : codeString
-
-  const getLineNumber = (i) =>
-    showLineNums
-      ? `${((parseInt(start) + i).toString() + '    ').slice(0, 4)}`
-      : ''
+  const copyString = getCopyString(copyExclude, codeString)
 
   return (
     <div className={styles.component}>
       <div style={{ display: 'flex', position: 'relative' }}>
-        {file && <div className={styles.filename}>{file}</div>}
+        <If condition={file}>
+          <div className={styles.filename}>{file}</div>
+        </If>
         <div style={{ display: 'flex', flexGrow: 1 }}></div>
-        {language && language !== 'none' && (
+        <If condition={language !== 'none'}>
           <div className={styles.language}>{language}</div>
-        )}
+        </If>
       </div>
       <div className={styles.codeContainer}>
         <Highlight
@@ -102,15 +90,15 @@ const Code = ({
                 let props = {}
 
                 if (isTerminal) {
-                  props['data-prepend'] =
-                    codeString.split('\n').length === 1 ||
-                    commands.includes(i + 1)
-                      ? '$ │   '
-                      : '  │   '
-                }
-
-                if (showLineNums) {
-                  props['data-line-number'] = getLineNumber(i)
+                  props['data-prepend'] = getTerminalCommands(
+                    i,
+                    commands,
+                    codeString
+                  )
+                } else if (showLineNums) {
+                  props['data-line-number'] = `${(
+                    (parseInt(start) + i).toString() + '    '
+                  ).slice(0, 4)}`
                 }
 
                 return (
@@ -119,16 +107,10 @@ const Code = ({
                     {...getLineProps({ line, key: i })}
                     className={clsx({
                       [styles.line]: true,
-                      [styles.noIndent]:
-                        !showLineNums &&
-                        adding.length < 1 &&
-                        removing.length < 1,
+                      [styles.noIndent]: hideGutter,
                       [styles.addLine]: adding.includes(i + 1),
                       [styles.removeLine]: removing.includes(i + 1),
-                      [styles.highlightLine]:
-                        adding.includes(i + 1) ||
-                        removing.includes(i + 1) ||
-                        highlighted.includes(i + 1)
+                      [styles.highlightLine]: allHighlighted.includes(i + 1)
                     })}
                     {...props}
                   >
@@ -151,5 +133,18 @@ const Code = ({
     </div>
   )
 }
+
+const getCopyString = (copyExclude, codeString) =>
+  copyExclude.length
+    ? codeString
+        .split('\n')
+        .filter((x, i) => copyExclude.includes(i + 1))
+        .join('\n')
+    : codeString
+
+const getTerminalCommands = (i, commands, codeString) =>
+  codeString.split('\n').length === 1 || commands.includes(i + 1)
+    ? '$ │   '
+    : '  │   '
 
 export default Code
