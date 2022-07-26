@@ -1,11 +1,10 @@
 .button {
   position: absolute;
-  top: 0;
-  right: 0;
-  margin: 12px;
-  border-radius: 8px;
+  top: 8px;
+  right: 8px;
+  border-radius: 6px;
   background: deepskyblue;
-  padding: 6px;
+  padding: 5px;
   border: none;
   cursor: pointer;
   color: #e2e8f0;
@@ -14,7 +13,7 @@
 }
 
 .button svg {
-  height: 24px;
+  height: 32px;
   width: 24px;
   margin: 6px;
 }
@@ -101,7 +100,7 @@
 }
 
 .component pre {
-  min-height: 42px;
+  min-height: 44px;
   position: relative;
   padding: 20px;
   padding-top: 30px;
@@ -120,7 +119,7 @@
 }
 
 .terminal div {
-  color: white !important;
+  color: lightgray !important;
 }
 
 .terminal div:before {
