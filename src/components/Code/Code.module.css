@@ -9,7 +9,6 @@
   cursor: pointer;
   color: #e2e8f0;
   font-size: 14px;
-  font-family: sans-serif;
 }
 
 .button svg {
@@ -21,10 +20,12 @@
 .line:before {
   content: attr(data-prepend) attr(data-line-number) '    ';
   font-size: smaller;
+  color: gray important!;
 }
 
 .no-indent:before {
   content: attr(data-prepend) attr(data-line-number);
+  color: gray important!;
 }
 
 .highlight-line,
@@ -52,41 +53,40 @@
 }
 
 .filename {
-  display: flex;
-  color: #fff;
-  font-family: 'Roboto';
-  font-style: italic;
-  font-size: 1.25rem;
-  display: flex;
-  justify-content: center;
   align-items: center;
-  margin: 5px;
   background-color: dodgerblue;
+  border-radius: 6px;
+  color: #fff;
+  display: flex;
+  display: flex;
+  font-family: 'Montserrat';
+  font-size: 1.25rem;
+  font-style: italic;
+  justify-content: center;
+  margin: 5px;
+  margin-bottom: 10px;
   padding: 4px;
   padding-left: 10px;
   padding-right: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
 }
 
 .language {
-  display: flex;
-  color: #fff;
-  text-transform: uppercase;
-  font-family: 'Montserrat';
-  font-weight: bold;
-  border: 1px solid black;
-  text-align: center;
-  display: flex;
-  justify-content: center;
   align-items: center;
+  background-color: blue;
+  border-radius: 6px;
+  border: 1px solid black;
+  color: #fff;
+  display: flex;
+  font-family: 'Tahoma';
+  font-weight: bold;
+  justify-content: center;
   margin: 5px;
+  margin-bottom: 10px;
   padding: 2px;
   padding-left: 10px;
   padding-right: 10px;
-  background-color: blue;
-  border-radius: 6px;
-  margin-bottom: 10px;
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .component {
@@ -100,12 +100,12 @@
 }
 
 .component pre {
+  background: #000;
+  margin: 0;
   min-height: 44px;
-  position: relative;
   padding: 20px;
   padding-top: 30px;
-  margin: 0;
-  background: #000;
+  position: relative;
 }
 
 .code-container {
@@ -118,7 +118,8 @@
   opacity: 66%;
 }
 
-.terminal div {
+.terminal div,
+.code-container div:before {
   color: lightgray !important;
 }
 
