@@ -101,12 +101,12 @@
 }
 
 .component pre {
-  min-height: 50px;
+  min-height: 42px;
   background: '#fff';
 
   position: relative;
   padding: 20px;
-  padding-top: 29px;
+  padding-top: 32px;
   margin: 0;
   background: #000;
 }

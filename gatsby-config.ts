@@ -21,7 +21,7 @@ const config: GatsbyConfig = {
           {
             resolve: `gatsby-remark-images`,
             options: {
-              maxWidth: 900
+              maxWidth: 960
             }
           }
         ]
@@ -58,7 +58,7 @@ const config: GatsbyConfig = {
     {
       resolve: 'gatsby-plugin-released',
       options: {
-        force: false
+        force: process.env.NODE_ENV === 'development'
       }
     }
   ]
