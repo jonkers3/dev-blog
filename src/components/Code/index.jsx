@@ -4,7 +4,7 @@ import theme from 'prism-react-renderer/themes/github'
 import rangeParser from 'parse-numeric-range'
 import { clsx } from 'clsx'
 import { If } from '@components/Utils'
-import Clipboard from '@assets/icon.svg'
+import ClipboardIcon from '@assets/clipboard.svg'
 import * as styles from './Code.module.css'
 
 const CopyButton = (props) => {
@@ -12,7 +12,7 @@ const CopyButton = (props) => {
 
   return (
     <button className={styles.button} {...rest}>
-      <Clipboard title='Copy' />
+      <ClipboardIcon title='Copy' />
       <If condition={isCopied}>
         <i>
           <br />
