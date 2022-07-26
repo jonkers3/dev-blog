@@ -104,7 +104,7 @@ export onCreateWebpackConfig = ({ actions }) => {
 }
 ```
 
-```json file=ts-config.json exclude=1,2,6
+```json file=ts-config.json add=3-5 exclude=1,2,6
 {
   "compilerOptions": {
     "paths": {
@@ -470,7 +470,7 @@ We need to make a change to the configuration for the `gatsby-plugin-mdx` plugin
 
 Replace the existing reference to ```'gatsby-plugin-mdx'``` with a new object definition, like this:
 
-```js file=gatsby-config.ts remove=1 add=3-12
+```js file=gatsby-config.ts remove=1 exclude=2 add=3-12
 'gatsby-plugin-mdx',
 
 {

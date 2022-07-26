@@ -1,6 +1,6 @@
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
-import theme from 'prism-react-renderer/themes/github'
+// import theme from 'prism-react-renderer/themes/github'
 import rangeParser from 'parse-numeric-range'
 import { clsx } from 'clsx'
 import { If } from '@components/Utils'
@@ -76,7 +76,11 @@ const Code = ({
           // theme={theme}
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre className={clsx({ [styles.terminal]: isTerminal })}>
+            <pre
+              className={clsx({
+                [styles.terminal]: isTerminal || language === 'none'
+              })}
+            >
               {parseInt(copy) !== 0 && (
                 <CopyButton
                   onClick={() => {
