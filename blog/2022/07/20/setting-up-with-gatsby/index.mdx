@@ -484,10 +484,10 @@ As a bonus, we also get a neat progressive loading effect, as well as responsive
 
 Our use case involves the frequent usage of code blocks, so we might as well make them as easy to digest and as visually pleasing as possible. Prism.js gives us syntax highlighting in almost any language with fairly minimal effort. To get the basic functionality we need only do three things:
 
-### Install prism-react-renderer (and mdx-utils)
+### Install prism-react-renderer
 
 ```sh
-npm i prism-react-renderer mdx-utils
+npm i prism-react-renderer
 ```
 
 ### Create a new component to render code blocks
@@ -539,18 +539,6 @@ import { preToCodeBlock } from 'mdx-utils'
 import Code from '@components/Code'
 import Layout from '@components/Layout'
 
-const components = {
-  pre: (preProps) => {
-    const props = preToCodeBlock(preProps)
-
-    if (props) {
-      return <Code {...props} />
-    } else {
-      return <pre {...preProps} />
-    }
-  }
-}
-
 const BlogPost = ({ data }) => {
   return (
     <Layout>
@@ -573,6 +561,31 @@ export const query = graphql`
     }
   }
 `
+
+const components = {
+  pre: preProps => {
+    if (preProps.children?.props?.mdxType !== 'code') {
+      return <pre {...preProps} />
+    }
+
+    const {
+      children: codeString,
+      className = '',
+      ...props
+    } = preProps.children.props
+
+    const match = className.match(/language-([\0-\uFFFF]*)/)
+
+    return (
+      <Code
+        {...props}
+        codeString={codeString.trim()}
+        className={className}
+        language={match != null ? match[1] : ''}
+      />
+    )
+  }
+}
 
 export default BlogPost
 ```

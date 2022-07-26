@@ -42,11 +42,7 @@ export const query = graphql`
 
 const components = {
   pre: (preProps) => {
-    if (
-      preProps.children &&
-      preProps.children.props &&
-      preProps.children.props.mdxType === 'code'
-    ) {
+    if (preProps.children?.props?.mdxType === 'code') {
       const {
         children: codeString,
         className = '',
