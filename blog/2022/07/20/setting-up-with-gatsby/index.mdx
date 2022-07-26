@@ -379,7 +379,7 @@ That needs to be referenced by a gatsby-browser file, so create one:
 import './src/styles/global.css'
 ```
 
-We _could_ wrap our two pages so that they are using our new layout component, like this :
+We wrap our two pages so that they are using our new layout component, like this :
 
 ```jsx file=src/pages/{mdx.slug}.js add=1,6,9 remove=5,10 start=1
 import Layout from '@components/Layout'
@@ -418,9 +418,9 @@ const Blog = ({ data }) => {
 }
 ```
 
-However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default by adding the following to `gatsby-browser.js` :
+<!-- However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default by adding the following to `gatsby-browser.js` : -->
 
-```jsx file=gatsby-browser.js add=1-2,4-9
+<!-- ```jsx file=gatsby-browser.js add=1-2,4-9
 import * as React from 'react'
 import Layout from '@components/Layout'
 import './src/styles/global.css'
@@ -430,7 +430,7 @@ const wrapPageElement = ({ element, props }) => {
 }
 
 export { wrapPageElement }
-```
+``` -->
 
 <br/>
 
