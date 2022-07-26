@@ -14,5 +14,6 @@
     "allowJs": false,
     "allowSyntheticDefaultImports": true,
   },
+
   "include": ["./src/**/*", "./gatsby-node.ts", "./gatsby-config.ts", "./plugins/**/*"]
 }
