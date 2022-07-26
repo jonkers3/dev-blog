@@ -27,7 +27,6 @@
     "gatsby-plugin-released": "^0.3.0",
     "gatsby-plugin-sharp": "^4.18.1",
     "gatsby-remark-images": "^6.19.0",
-    "gatsby-remark-prismjs": "^6.19.0",
     "gatsby-source-filesystem": "^4.18.1",
     "gatsby-transformer-sharp": "^4.18.1",
     "lodash.kebabcase": "^4.1.1",
