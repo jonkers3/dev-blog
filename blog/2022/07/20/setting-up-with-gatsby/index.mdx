@@ -21,7 +21,7 @@ This is an example of how to bootstrap a new blog with Gatsby in 2022.
 ## 1. Bootstrapping a new Gatsby Project
 ---
 
-We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_ :
+We could install `gatbsy-cli` globally or we can run it with NPX, but either way, _use the CLI to bootstrap the project_:
 
 ```sh image=init.png
 npx gatsby new
@@ -31,7 +31,7 @@ npx gatsby new
 
 Run the CLI and follow the prompts to choose your styling library, plugins, typescript or not, that sort of thing. This time we selected MDX support, responsive images, and React Helmet. For styling, we're going to use plain CSS modules.
 
-The CLI will generate some files, and the first one to know about it is `gatsby-config.js/ts` :
+The CLI will generate some files, and the first one to know about it is `gatsby-config.js/ts`:
 
 ```typescript file=gatsby-config.ts
 import type { GatsbyConfig } from 'gatsby'
@@ -74,13 +74,28 @@ const config: GatsbyConfig = {
 export default config
 ```
 
-In terms of initial setup, there are a few things we can do, like:
+First, a few things for our initial setup:
 
-Setting up an alias for our components directory so we can use absolute imports (Typescript users will also need to update their `tsconfig.json`) :
+<br/>
+
+### ES6 syntax in `gatsby-node.js`
+
+Yes, we can.
+
+```sh image=init.png
+npm i esm
+```
 
 ```js file=gatsby-node.js
+require = require('esm')(module)
+module.exports = require('./gatsby-node.esm.js')
+```
+
+### Add aliases for absolute imports:
+```js file=gatsby-node.esm.js
 const path = require('path')
-exports.onCreateWebpackConfig = ({ actions }) => {
+
+export onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     resolve: {
       alias: {
@@ -100,7 +115,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
     ...
 ```
 
-If your setup is like mine, and you're using Typescript + CSS modules, you'll probably need a definitions file along these lines to prevent the TS compiler from finding fault with our CSS module imports :
+If your setup is like mine and you're using Typescript + CSS modules, you'll probably also want a definitions file along these lines to prevent the compiler from finding fault with our CSS module imports:
 
 ```typescript file=src/global.d.ts.ts
 declare module '*.css' {
@@ -114,11 +129,29 @@ declare module '*.css' {
 ## 2. Configuring a data source
 ---
 
+Our posts (as in the mdx files) will be organized by date in subfolders. The mdx behind this post is at `./blog/2022/07/20/setting-up-with-gatsby/index.mdx` in the local filesystem, for example.
+
+Our file system will also determine the URL of our post, so the way we organize our files is extremely important. This folder structure is what we want:
+
+```none copy=0
+📦blog
+ └ 📂2022
+ │ └ 📂07
+ │ │ ├ 📂20
+ │ │ │ └ 📂setting-up-with-gatsby
+ │ │ │ │ ├ 📜index.mdx
+ │ │ │ │ └ 📜mdx-graphql.png
+ │ │ ├ 📂22
+ │ │ │ └ 📂setting-up-with-gatsby-ii
+ │ │ │ │ ├ 📜github-pages-settings.png
+ │ │ │ │ └ 📜index.mdx
+```
+
 Make a folder called `blog` in the project root. This is where we will keep the markdown files that comprise our collection of blog posts.
 
 We tell Gatsby about this ```blog``` folder by adding one more item at the bottom of the ```plugins``` array in our `gatsby-config`, just below the other `gatsby-source-filesystem definitions`.
 
-In effect, this simply makes the files in the `blog` folder visible to our GraphQL queries :
+In effect, this makes the files in the `blog` folder visible to our GraphQL queries:
 
 ```js file=gatsby-config.ts exclude=1-3,12 add=4-11
 plugins: [
@@ -133,24 +166,6 @@ plugins: [
     __key: 'blog'
   }
 ]
-```
-
-As far as the posts themselves, as in the mdx files, we will organize them by date in subfolders. The mdx source behind this post is located in our filesystem at `blog/2022/07/20/setting-up-with-gatsby/index.mdx`, for example.
-
-Our file system will also determine the URL of our post, so the way we organize our files is extremely important. This folder structure that we want is this :
-
-```none copy=0
-📦blog
- └ 📂2022
- │ └ 📂07
- │ │ ├ 📂20
- │ │ │ └ 📂setting-up-with-gatsby
- │ │ │ │ ├ 📜index.mdx
- │ │ │ │ └ 📜mdx-graphql.png
- │ │ ├ 📂22
- │ │ │ └ 📂setting-up-with-gatsby-ii
- │ │ │ │ ├ 📜github-pages-settings.png
- │ │ │ │ └ 📜index.mdx
 ```
 
 <br/>
@@ -169,7 +184,7 @@ npm start
 
 At [localhost:8000/___graphql](http://localhost:8000/___graphql), you get the GraphQL query interface. Basically this is just a nice UI to query Gatsby's data layer, meaning the things you have configured Gatsby to be able to get data from (like our `blog` folder). We use the UI to develop the queries we need to power our site.
 
-For example, this query is basically what we will run to get the data to generate the index page. Try running this query while the `blog` folder is still empty :
+For example, this query is basically what we will run to get the data to generate the index page. Try running this query while the `blog` folder is still empty:
 
 ```graphql
 query BlogPosts {
@@ -197,7 +212,7 @@ What happens is that GraphQL will throw an error: `Value "frontmatter___date" do
 
 If we had any files with `frontmatter___date` set, it would have been added to the schema dynamically. If not, GraphQL has no way of knowing that it exists.
 
-However, if we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this :
+However, if we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this:
 
 ```js file=gatsby-node.js
 exports.createSchemaCustomization = ({ actions }) => {
@@ -216,13 +231,13 @@ exports.createSchemaCustomization = ({ actions }) => {
 
 This isn't necessary because we don't plan on having an empty blog or inconsistent metadata in our MDX files. It is mentioned just to clarify how GraphQL queries are working with frontmatter in Gatsby.
 
-In any case, we need at least [one MDX file with a date](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) to exist in our blog folder before we can continue. Once we have that, our query should work :
+In any case, we need at least [one MDX file with a date](https://raw.githubusercontent.com/jonkers3/dev-blog/master/blog/2022/07/20/setting-up-with-gatsby/index.mdx) to exist in our blog folder before we can continue. Once we have that, our query should work:
 
 ![](mdx-gql.png)
 
 <br/>
 
-Now, to create our index page, replace the contents of `src/pages/index.js` file with the following :
+Now, to create our index page, replace the contents of `src/pages/index.js` file with the following:
 
 ```jsx file=src/pages/index.js
 import * as React from 'react'
@@ -273,7 +288,7 @@ It is a super-simple pattern where each page component has a query right alongsi
 ## 4. Create a Template for Blog Posts
 ---
 
-Create a blog post template :
+Create a blog post template:
 
 ```jsx file=src/pages/{mdx.slug}.js
 import * as React from 'react'
@@ -315,7 +330,7 @@ Now, we should be able to click the links on the index page and be brought to a 
 
 The main thing we are in need of is some kind of navigation control. Eventually we need a header, footer, and that sort of thing. Getting our content nicely centered would also be nice.
 
-We will create a shared Layout component to address these things :
+We will create a shared Layout component to address these things:
 
 ```jsx file=src/components/Layout/index.jsx
 import React from 'react'
@@ -361,7 +376,7 @@ export default Layout
 }
 ```
 
-Speaking of styles, let's also make a global CSS file for rules that need to apply everywhere :
+Speaking of styles, let's also make a global CSS file for rules that need to apply everywhere:
 
 ```css file=src/styles/global.css
 body {
@@ -379,7 +394,7 @@ That needs to be referenced by a gatsby-browser file, so create one:
 import './src/styles/global.css'
 ```
 
-We wrap our two pages so that they are using our new layout component, like this :
+We wrap our two pages so that they are using our new layout component, like this:
 
 ```jsx file=src/pages/{mdx.slug}.js add=1,6,9 remove=5,10 start=1
 import Layout from '@components/Layout'
@@ -420,7 +435,7 @@ const Blog = ({ data }) => {
 
 However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default.
 
-Add the following to `gatsby-browser.js` and export it from `gatsby-ssr.js` :
+Add the following to `gatsby-browser.js` and export it from `gatsby-ssr.js`:
 
 ```jsx file=gatsby-browser.js add=1-2,4-9
 import * as React from 'react'
