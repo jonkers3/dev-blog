@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { graphql, Link } from 'gatsby'
+import kebabCase from 'lodash.kebabcase'
 
 const BlogPage = ({ data }) => {
   return (
@@ -7,7 +8,7 @@ const BlogPage = ({ data }) => {
       <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
         {data.allMdx.tags.map(({ tag }) => (
           <li style={{ margin: 8, listStyle: 'none' }}>
-            <Link to={`/tags/${tag}`}>{tag}</Link>
+            <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
           </li>
         ))}
       </ul>

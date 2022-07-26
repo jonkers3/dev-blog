@@ -2,6 +2,7 @@ import * as React from 'react'
 import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
+import kebabCase from 'lodash.kebabcase'
 import Code from '@components/Code'
 
 const BlogPost = ({ data }) => {
@@ -20,7 +21,7 @@ const TagList = ({ tags }) => (
   <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
     {tags.map((tag) => (
       <li style={{ margin: 8, listStyle: 'none' }}>
-        <Link to={`/tags/${tag}`}>{tag}</Link>
+        <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
       </li>
     ))}
   </ul>
