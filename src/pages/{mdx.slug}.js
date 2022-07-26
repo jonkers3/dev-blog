@@ -20,7 +20,7 @@ const BlogPost = ({ data }) => {
 const TagList = ({ tags }) => (
   <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
     {tags.map((tag) => (
-      <li style={{ margin: 8, listStyle: 'none' }}>
+      <li key={tag} style={{ margin: 8, listStyle: 'none' }}>
         <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
       </li>
     ))}

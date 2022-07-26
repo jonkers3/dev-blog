@@ -44,6 +44,7 @@ const Code = ({
 
   const highlighted = extractMetadata(highlight)
   const adding = extractMetadata(add)
+  const terminalOutput = extractMetadata(output)
   const removing = extractMetadata(remove)
   const excluding = extractMetadata(exclude)
   const commands = extractMetadata(command)
@@ -75,7 +76,7 @@ const Code = ({
           theme={theme}
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
-            <pre>
+            <pre className={clsx({ [styles.terminal]: isTerminal })}>
               {parseInt(copy) !== 0 && (
                 <CopyButton
                   onClick={() => {
@@ -108,6 +109,7 @@ const Code = ({
                     className={clsx({
                       [styles.line]: true,
                       [styles.noIndent]: hideGutter,
+                      [styles.terminalOutput]: terminalOutput.includes(i + 1),
                       [styles.addLine]: adding.includes(i + 1),
                       [styles.removeLine]: removing.includes(i + 1),
                       [styles.highlightLine]: allHighlighted.includes(i + 1)
@@ -120,12 +122,6 @@ const Code = ({
                   </div>
                 )
               })}
-              {isTerminal && output && (
-                <div>
-                  <hr />
-                  {output}
-                </div>
-              )}
             </pre>
           )}
         </Highlight>
@@ -144,7 +140,7 @@ const getCopyString = (copyExclude, codeString) =>
 
 const getTerminalCommands = (i, commands, codeString) =>
   codeString.split('\n').length === 1 || commands.includes(i + 1)
-    ? '$ │   '
-    : '  │   '
+    ? ' [user@localhost] $     ' // │
+    : '                        '
 
 export default Code

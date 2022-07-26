@@ -106,7 +106,7 @@
 
   position: relative;
   padding: 20px;
-  padding-top: 32px;
+  padding-top: 30px;
   margin: 0;
   background: #000;
 }
@@ -115,4 +115,12 @@
   overflow: auto;
   background: #011627;
   border-radius: 0.5rem;
+}
+
+.terminal-output {
+  opacity: 66%;
+}
+
+.terminal div:before {
+  font-size: medium;
 }
