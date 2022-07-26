@@ -10,11 +10,9 @@ tags: ['Gatsby', 'Guides', 'React']
 
 # Setting Up a Dev Blog with Gatsby in 2022
 
-Today we will set up our new dev blog. We will build it with Gatsby.
+Today we will set up a new dev blog. We will build it with Gatsby.
 
 The initial goals are just the basic functionality  of an index page with links to individual posts, and a few other things one would probably like given the need to work with a lot of code, like syntax highlighting and maybe copy-to-clipboard button.  We will be storing our content in markdown files.
-
-This is an example of how to bootstrap a new blog with Gatsby in 2022.
 
 <br/>
 
@@ -214,8 +212,8 @@ If we had any files with `frontmatter___date` set, it would have been added to t
 
 However, if we really wanted our query to work in this situation and return an empty result set instead of an error, we could do something like this:
 
-```js file=gatsby-node.js
-exports.createSchemaCustomization = ({ actions }) => {
+```js file=gatsby-node.esm.js
+export createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions
 
   createTypes(`
@@ -237,9 +235,9 @@ In any case, we need at least [one MDX file with a date](https://raw.githubuserc
 
 <br/>
 
-Now, to create our index page, replace the contents of `src/pages/index.js` file with the following:
+Now, to create our index page, replace the contents of `src/pages/index.jsx` file with the following:
 
-```jsx file=src/pages/index.js
+```jsx file=src/pages/index.jsx
 import * as React from 'react'
 import { graphql, Link } from 'gatsby'
 
@@ -290,7 +288,7 @@ It is a super-simple pattern where each page component has a query right alongsi
 
 Create a blog post template:
 
-```jsx file=src/pages/{mdx.slug}.js
+```jsx file=src/pages/{mdx.slug}.jsx
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
@@ -396,7 +394,7 @@ import './src/styles/global.css'
 
 We wrap our two pages so that they are using our new layout component, like this:
 
-```jsx file=src/pages/{mdx.slug}.js add=1,6,9 remove=5,10 start=1
+```jsx file=src/pages/{mdx.slug}.jsx add=1,6,9 remove=5,10 start=1
 import Layout from '@components/Layout'
 
 const BlogPost = ({ data }) => {
@@ -545,7 +543,7 @@ export default Code
 
 ### Wrap MDXRenderer with provider
 
-```jsx file=src/pages/{mdx.slug}.js
+```jsx file=src/pages/{mdx.slug}.jsx
 import * as React from 'react'
 import { graphql } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'

@@ -73,7 +73,7 @@ const Code = ({
           {...defaultProps}
           code={codeString}
           language={language}
-          theme={theme}
+          // theme={theme}
         >
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre className={clsx({ [styles.terminal]: isTerminal })}>
