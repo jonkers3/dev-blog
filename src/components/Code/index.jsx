@@ -140,7 +140,7 @@ const getCopyString = (copyExclude, codeString) =>
 
 const getTerminalCommands = (i, commands, codeString) =>
   codeString.split('\n').length === 1 || commands.includes(i + 1)
-    ? ' [user@localhost] $     ' // │
-    : '                        '
+    ? '[user@localhost] $   ' // │
+    : '                     '
 
 export default Code
