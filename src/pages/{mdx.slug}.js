@@ -3,17 +3,16 @@ import { graphql, Link } from 'gatsby'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
 import Code from '@components/Code'
-import Layout from '@components/Layout'
 
 const BlogPost = ({ data }) => {
   return (
-    <Layout>
+    <>
       <TagList tags={data.mdx.frontmatter.tags} />
       <MDXProvider components={components}>
         <p>{data.mdx.frontmatter.date}</p>
         <MDXRenderer>{data.mdx.body}</MDXRenderer>
       </MDXProvider>
-    </Layout>
+    </>
   )
 }
 

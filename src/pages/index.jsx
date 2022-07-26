@@ -1,10 +1,9 @@
 import * as React from 'react'
 import { graphql, Link } from 'gatsby'
-import Layout from '@components/Layout'
 
 const BlogPage = ({ data }) => {
   return (
-    <Layout>
+    <>
       <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
         {data.allMdx.tags.map(({ tag }) => (
           <li style={{ margin: 8, listStyle: 'none' }}>
@@ -21,7 +20,7 @@ const BlogPage = ({ data }) => {
           <p>{node.slug}</p>
         </article>
       ))}
-    </Layout>
+    </>
   )
 }
 

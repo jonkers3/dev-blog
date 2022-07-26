@@ -1,6 +1,5 @@
 import React from 'react'
 import { graphql, Link } from 'gatsby'
-import Layout from '@components/Layout'
 
 export default function TagPage({
   data: { allMdx },
@@ -9,7 +8,7 @@ export default function TagPage({
   const posts = allMdx.edges
 
   return (
-    <Layout>
+    <>
       {/* <Seo title={`#${tag}`} /> */}
       <h1>#{tag}</h1>
       <ol>
@@ -19,7 +18,7 @@ export default function TagPage({
           </li>
         ))}
       </ol>
-    </Layout>
+    </>
   )
 }
 
