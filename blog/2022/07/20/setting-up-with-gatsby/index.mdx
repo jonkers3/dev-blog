@@ -418,9 +418,11 @@ const Blog = ({ data }) => {
 }
 ```
 
-<!-- However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default by adding the following to `gatsby-browser.js` : -->
+However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default.
 
-<!-- ```jsx file=gatsby-browser.js add=1-2,4-9
+Add the following to `gatsby-browser.js` and export it from `gatsby-ssr.js` :
+
+```jsx file=gatsby-browser.js add=1-2,4-9
 import * as React from 'react'
 import Layout from '@components/Layout'
 import './src/styles/global.css'
@@ -430,7 +432,11 @@ const wrapPageElement = ({ element, props }) => {
 }
 
 export { wrapPageElement }
-``` -->
+```
+
+```jsx file=gatsby-ssr.js
+export { wrapPageElement } from './gatsby-browser.js'
+```
 
 <br/>
 
