@@ -50,16 +50,20 @@ const PostPage = ({ pageContext, ...props }) => {
     <>
       <TagList tags={pageContext.node.frontmatter.tags} />
       <div style={{ textAlign: 'right' }}>
-        {prev && (
+        {prev ? (
           <>
             <Link to={prev.url}>{'< '}Prev Post</Link>
           </>
+        ) : (
+          '< Prev Post'
         )}
-        {prev && next && <> | </>}
-        {next && (
+        <> | </>
+        {next ? (
           <>
             <Link to={next.url}>Next Post{' >'}</Link>
           </>
+        ) : (
+          'Next Post >'
         )}
       </div>
       <MDXProvider components={mdxComponents}>
