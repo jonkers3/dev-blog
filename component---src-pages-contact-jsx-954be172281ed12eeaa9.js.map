@@ -1,0 +1,1 @@
+{"version":3,"file":"component---src-pages-contact-jsx-954be172281ed12eeaa9.js","mappings":"yGAAe,SAASA,EAAT,GAA+B,EAARC,KACpC,OAAO,IACR,C","sources":["webpack://dev-blog/./src/pages/contact.jsx"],"sourcesContent":["export default function ContactPage({ data }) {\n  return null\n}\n"],"names":["ContactPage","data"],"sourceRoot":""}
