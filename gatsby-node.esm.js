@@ -31,7 +31,7 @@ export const createPages = async ({ graphql, actions }) => {
 
   const result = await graphql(`
     query {
-      allMdx {
+      allMdx(filter: { fields: { released: { eq: true } } }) {
         edges {
           node {
             frontmatter {
