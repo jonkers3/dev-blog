@@ -38,7 +38,7 @@ const PostPage = ({ pageContext, ...props }) => {
           paddingTop: '3rem'
         }}
       >
-        <div>
+        <div style={{ flexBasis: 'calc(50%)', padding: '20px' }}>
           {prev && (
             <Link to={prev.url}>
               <span>Previous</span>
@@ -46,8 +46,9 @@ const PostPage = ({ pageContext, ...props }) => {
             </Link>
           )}
         </div>
-        <div style={{ width: '2.5rem' }}></div>
-        <div style={{ textAlign: 'end' }}>
+        <div
+          style={{ textAlign: 'end', flexBasis: 'calc(50%)', padding: '20px' }}
+        >
           {next && (
             <Link to={next.url}>
               <span>Next</span>

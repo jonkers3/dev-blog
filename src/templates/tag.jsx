@@ -25,7 +25,7 @@ export const pageQuery = graphql`
   query ($slugs: [String]) {
     allMdx(
       sort: { fields: frontmatter___date, order: DESC }
-      filter: { slug: { in: $slugs } }
+      filter: { slug: { in: $slugs }, fields: { released: { eq: true } } }
     ) {
       edges {
         node {

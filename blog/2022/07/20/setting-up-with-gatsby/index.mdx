@@ -396,7 +396,7 @@ const BlogPost = ({ data }) => {
 }
 ```
 
-```jsx file=src/pages/index.jsx add=1,6,16 remove=5,17
+```jsx file=src/pages/index.jsx add=1,6,16 remove=5,17 start=1
   import Layout from '@components/Layout'
 
 const Blog = ({ data }) => {
@@ -418,7 +418,7 @@ const Blog = ({ data }) => {
 }
 ```
 
-However, that leads to some extra unmounting and remounting during navigation. Instead of doing that, we can wrap all of our pages by default.
+However, we want every page wrapped, so we can do this instead to acheive the same thing, and new pages we add will be wrapped by default:
 
 Add the following to `gatsby-browser.js` and export it from `gatsby-ssr.js`:
 
@@ -655,7 +655,7 @@ export default Code
   top: 0;
   right: 0;
   margin: 8px;
-  padding: 8px 12px 8px 12px;
+  padding: 8px 12px;
   border-radius: 8px;
   border-width: 0;
   background: deepskyblue;

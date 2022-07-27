@@ -17,8 +17,15 @@ const BlogPage = ({ data }) => {
           <h2>
             <Link to={`/${node.slug}`}>{node.frontmatter.title}</Link>
           </h2>
-          <p>Posted: {node.frontmatter.date}</p>
-          <p>{node.slug}</p>
+          <p>
+            Posted: {node.frontmatter.date} in{' '}
+            {node.frontmatter.tags.map((tag, i) => (
+              <>
+                <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
+                {i < node.frontmatter.tags.length - 1 ? ', ' : ''}
+              </>
+            ))}
+          </p>
         </article>
       ))}
     </>
@@ -34,6 +41,7 @@ export const query = graphql`
       nodes {
         frontmatter {
           date(formatString: "MMMM D, YYYY")
+          tags
           title
         }
         tableOfContents
