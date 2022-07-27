@@ -1,6 +1,5 @@
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
-// import theme from 'prism-react-renderer/themes/github'
 import rangeParser from 'parse-numeric-range'
 import { clsx } from 'clsx'
 import { If } from '@components/Utils'
@@ -49,7 +48,7 @@ const Code = ({
   const excluding = extractMetadata(exclude)
   const commands = extractMetadata(command)
 
-  const allHighlighted = adding + removing + highlighted
+  const allHighlighted = adding.concat(removing).concat(highlighted)
 
   const showLineNums = parseInt(start) > 0
   const hideGutter = !showLineNums && adding.length < 1 && removing.length < 1
@@ -60,8 +59,8 @@ const Code = ({
   return (
     <div className={styles.component}>
       <div style={{ display: 'flex', position: 'relative' }}>
-        <If condition={file}>
-          <div className={styles.filename}>{file}</div>
+        <If condition={isTerminal || file}>
+          <div className={styles.filename}>{isTerminal ? '>_' : file}</div>
         </If>
         <div style={{ display: 'flex', flexGrow: 1 }}></div>
         <If condition={language !== 'none'}>
@@ -69,12 +68,7 @@ const Code = ({
         </If>
       </div>
       <div className={styles.codeContainer}>
-        <Highlight
-          {...defaultProps}
-          code={codeString}
-          language={language}
-          // theme={theme}
-        >
+        <Highlight {...defaultProps} code={codeString} language={language}>
           {({ className, style, tokens, getLineProps, getTokenProps }) => (
             <pre
               className={clsx({

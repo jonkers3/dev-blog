@@ -1,18 +1,12 @@
 ---
-
-title: Setting Up a Dev Blog With Gatsby in 2022
-
+title: Setting Up a new Dev Blog With Gatsby in 2022
 date: 2022-07-20
-
 tags: ['Gatsby', 'Guides', 'React']
-
 ---
-
-# Setting Up a Dev Blog with Gatsby in 2022
 
 Today we will set up a new dev blog. We will build it with Gatsby.
 
-The initial goals are just the basic functionality  of an index page with links to individual posts, and a few other things one would probably like given the need to work with a lot of code, like syntax highlighting and maybe copy-to-clipboard button.  We will be storing our content in markdown files.
+The initial goals are just the basic functionality of an index page with links to individual posts, and some niceties for presenting a lot of code, like syntax highlighting and a copy-to-clipboard button. We will be storing our content in markdown files.
 
 <br/>
 
@@ -31,7 +25,7 @@ Run the CLI and follow the prompts to choose your styling library, plugins, type
 
 The CLI will generate some files, and the first one to know about it is `gatsby-config.js/ts`:
 
-```typescript file=gatsby-config.ts
+```ts file=gatsby-config.ts
 import type { GatsbyConfig } from 'gatsby'
 
 const config: GatsbyConfig = {
@@ -74,11 +68,7 @@ export default config
 
 First, a few things for our initial setup:
 
-<br/>
-
-### ES6 syntax in `gatsby-node.js`
-
-Yes, we can.
+### Using ES6 syntax in `gatsby-node.js`
 
 ```sh image=init.png
 npm i esm
@@ -115,7 +105,7 @@ export onCreateWebpackConfig = ({ actions }) => {
 
 If your setup is like mine and you're using Typescript + CSS modules, you'll probably also want a definitions file along these lines to prevent the compiler from finding fault with our CSS module imports:
 
-```typescript file=src/global.d.ts.ts
+```ts file=src/global.d.ts.ts
 declare module '*.css' {
   const content: { [className: string]: string }
   export = content
@@ -147,11 +137,11 @@ Our file system will also determine the URL of our post, so the way we organize 
 
 Make a folder called `blog` in the project root. This is where we will keep the markdown files that comprise our collection of blog posts.
 
-We tell Gatsby about this ```blog``` folder by adding one more item at the bottom of the ```plugins``` array in our `gatsby-config`, just below the other `gatsby-source-filesystem definitions`.
+We tell Gatsby about this `blog` folder by adding one more item at the bottom of the `plugins` array in our `gatsby-config`, just below the other `gatsby-source-filesystem` definitions.
 
 In effect, this makes the files in the `blog` folder visible to our GraphQL queries:
 
-```js file=gatsby-config.ts exclude=1-3,12 add=4-11
+```ts file=gatsby-config.ts exclude=1-3,12 add=4-11
 plugins: [
   ...
 
@@ -392,7 +382,7 @@ That needs to be referenced by a gatsby-browser file, so create one:
 import './src/styles/global.css'
 ```
 
-We wrap our two pages so that they are using our new layout component, like this:
+We _could_ wrap each of our pages with our new layout component, like this:
 
 ```jsx file=src/pages/{mdx.slug}.jsx add=1,6,9 remove=5,10 start=1
 import Layout from '@components/Layout'
@@ -431,7 +421,7 @@ const Blog = ({ data }) => {
 }
 ```
 
-However, that leads to some extra unmounting and remounting during navigation. Instead of that, we can wrap all of our pages by default.
+However, that leads to some extra unmounting and remounting during navigation. Instead of doing that, we can wrap all of our pages by default.
 
 Add the following to `gatsby-browser.js` and export it from `gatsby-ssr.js`:
 
@@ -461,7 +451,7 @@ Storing image files directly alongside the markdown files is obviously ideal in 
 We want to be able to reference images in our Markdown files like this:
 
 ```markdown
-## I ❤️ Mdx
+## MDX ❤️
 
 ![Alt Text](hello.png)
 ```
@@ -470,7 +460,7 @@ We need to make a change to the configuration for the `gatsby-plugin-mdx` plugin
 
 Replace the existing reference to ```'gatsby-plugin-mdx'``` with a new object definition, like this:
 
-```js file=gatsby-config.ts remove=1 exclude=2 add=3-12
+```ts file=gatsby-config.ts remove=1 exclude=2 add=3-12
 'gatsby-plugin-mdx',
 
 {
@@ -485,10 +475,9 @@ Replace the existing reference to ```'gatsby-plugin-mdx'``` with a new object de
 },
 ```
 
-Now, upon restarting the development server, can reference images from within our markdown files like this:
+Upon restarting the development server, we can reference images as described and everything works.
 
-
-As a bonus, we also get a neat progressive loading effect, as well as responsive thumbnails.
+As a bonus, we also now get a neat progressive loading effect, as well as responsive thumbnails.
 
 <br/>
 
@@ -499,7 +488,7 @@ Our use case involves the frequent usage of code blocks, so we might as well mak
 
 ### Install prism-react-renderer
 
-```sh commands=1
+```sh
 npm i prism-react-renderer
 ```
 
@@ -509,7 +498,6 @@ npm i prism-react-renderer
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
-import * as styles from './code.module.css'
 
 const Code = ({ codeString, language, ...props }) => {
   return (
@@ -614,13 +602,14 @@ Given the endless possibilities we will have to have a post entirely dedicated t
 
 If you've made it to this point, you should have a pretty spiffy looking setup coming together. As far as our initial list of desired features, the only thing we have yet to do is the Copy-to-Clipboard button. This is the last task of our initial setup. We need to change only one file to get this working. Add the following code to it:
 
-```jsx file=src/components/Code/index.jsx add=6,23-31
+```jsx file=src/components/Code/index.jsx add=4-7,24-32 start=1
 import React from 'react'
 import Highlight, { defaultProps } from 'prism-react-renderer'
 import theme from 'prism-react-renderer/themes/github'
 import * as styles from './code.module.css'
 
-const CopyButton = (props) => <button className={styles.button} {...props} />
+const CopyButton = props =>
+  <button className={styles.button} {...props} />
 
 const Code = ({ codeString, language, ...props }) => {
   const [isCopied, setIsCopied] = React.useState(false)

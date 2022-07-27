@@ -1,14 +1,8 @@
 ---
-
 title: Deploying a Gatsby Dev Blog on Github Pages
-
 date: 2022-07-22
-
-tags: ['Gatsby', 'CI']
-
+tags: ['CI', 'Gatsby', 'Guides']
 ---
-
-# Deploying Our New Gatsby Dev Blog
 
 Today we will deploying the new Gatsby-based dev blog that we worked through setting up [here](/2022/07/20/setting-up-with-gatsby/).
 
@@ -135,8 +129,9 @@ The value for our pathPrefix is, of course, the name of the Github repository. W
 
 It turns out to be as easy as that. Push the rest of your changes and things should be good to go.
 
-```sh
-git add -A && git commit -m 'initial deploy' && git push
+```sh command=1,2
+git add -A && git commit -m 'initial deploy'
+git push
 ```
 
 At this point, the blog should be looking good on Github Pages. Have fun with your new Gatsby blog!

@@ -7,7 +7,7 @@ const BlogPage = ({ data }) => {
     <>
       <ul style={{ display: 'flex', justifyContent: 'flex-end' }}>
         {data.allMdx.tags.map(({ tag }) => (
-          <li style={{ margin: 8, listStyle: 'none' }}>
+          <li key={tag} style={{ margin: '8px', listStyle: 'none' }}>
             <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
           </li>
         ))}

@@ -9,7 +9,6 @@ export default function TagPage({
 
   return (
     <>
-      {/* <Seo title={`#${tag}`} /> */}
       <h1>#{tag}</h1>
       <ol>
         {posts.map(({ node }) => (

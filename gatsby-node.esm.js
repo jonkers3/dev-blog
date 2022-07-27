@@ -21,8 +21,6 @@ export const createSchemaCustomization = ({ actions }) => {
     }
     type MdxFrontmatter {
       date: Date @dateformat
-    }
-    type MdxFrontmatter {
       tags: [String]
     }
   `)
@@ -38,10 +36,11 @@ export const createPages = async ({ graphql, actions }) => {
           node {
             frontmatter {
               title
-              date
+              date(formatString: "MMMM D, YYYY")
               tags
             }
             slug
+            body
           }
         }
       }
@@ -49,18 +48,28 @@ export const createPages = async ({ graphql, actions }) => {
   `)
 
   const tags = {}
-  const tagTemplate = path.resolve(`src/templates/tag.js`)
+  const tagTemplate = path.resolve(`src/templates/tag.jsx`)
+  const postTemplate = path.resolve(`src/templates/post.jsx`)
 
-  result.data.allMdx.edges
-    .filter(({ node }) => node.frontmatter.tags)
-    .forEach(({ node }) => {
-      node.frontmatter.tags.forEach((tag) => {
-        if (!tags[tag]) {
-          tags[tag] = []
-        }
-        tags[tag].push(node.slug)
-      })
+  const posts = result.data.allMdx.edges
+  posts.forEach(({ node }, i) => {
+    createPage({
+      path: node.slug,
+      component: postTemplate,
+      context: {
+        node,
+        prev: i === 0 ? null : posts[i - 1].node,
+        next: i === posts.length - 1 ? null : posts[i + 1].node
+      }
     })
+
+    node.frontmatter.tags.forEach((tag) => {
+      if (!tags[tag]) {
+        tags[tag] = []
+      }
+      tags[tag].push(node.slug)
+    })
+  })
 
   Object.keys(tags).forEach((tag) => {
     createPage({

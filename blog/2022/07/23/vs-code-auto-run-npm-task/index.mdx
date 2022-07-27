@@ -1,0 +1,34 @@
+---
+title: 'VS Code: How to run npm start on open'
+date: 2022-07-23
+tags: ['VS Code', 'Workflow Tips']
+---
+
+For certain projects it's very convenient to run an NPM task automatically when opening their folder in VS Code. Use `presentation.reveal` to control whether the terminal is automatically shown.
+
+```json file=.vscode/tasks.json
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "npm start",
+      "type": "shell",
+      "command": "npm start",
+      "windows": {
+        "command": "npm start"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "new"
+      },
+      "runOptions": { "runOn": "folderOpen" }
+    },
+
+    ...
+  ]
+}
+```
+
+The next time you open the folder, if it doesn't prompt you for permission `Ctrl + Shift + P` and search for `Tasks: Manage Automatic Tasks in Folder` and set to allow.
