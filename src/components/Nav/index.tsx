@@ -6,13 +6,19 @@ import GithubLink from '@assets/gh.svg'
 export default function Nav() {
   return (
     <header>
-      <nav>
+      <nav className={styles.nav}>
         <ul className={styles.navLinks}>
           <li className={styles.navLinkItem}>
             <Link to='/' className={styles.navLinkText}>
               Home
             </Link>
           </li>
+          {/* <li className={styles.navLinkItem}>
+            <Link to='/contact' className={styles.navLinkText}>
+              Contact
+            </Link>
+          </li> */}
+          <li className={styles.navLinkItem}></li>
           <li className={styles.navLinkItem}>
             <a
               href='https://github.com/jonkers3/dev-blog'

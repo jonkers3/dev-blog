@@ -3,17 +3,31 @@
 }
 
 .nav-links {
-  column-count: 2;
-  column-gap: 85%;
   display: flex;
   list-style: none;
-  padding-left: 0;
+  align-self: stretch;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.nav-link-item {
-  padding-right: 1.2rem;
+.nav-link-item:not(:last-child) {
+  padding: 1.5rem;
+  padding-top: 0px;
+  text-align: left;
+}
+
+.nav-link-item:first-child {
+  padding-left: 0;
+  text-align: left;
+}
+
+.nav-link-item:last-child {
+  color: black;
+  padding-right: 12px;
+  flex-grow: 1;
+  text-align: right;
 }
 
 .nav-link-text {
-  font-size: 1.16em;
+  font-size: 1.2em;
 }
