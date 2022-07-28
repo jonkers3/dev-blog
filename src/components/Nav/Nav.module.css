@@ -1,8 +1,4 @@
-.heading {
-  color: gray;
-}
-
-.nav-links {
+.nav {
   display: flex;
   list-style: none;
   align-self: stretch;
@@ -10,24 +6,24 @@
   align-items: center;
 }
 
-.nav-link-item:not(:last-child) {
+.nav-item:not(:last-child) {
   padding: 1.5rem;
   padding-top: 0px;
   text-align: left;
 }
 
-.nav-link-item:first-child {
+.nav-item:first-child {
   padding-left: 0;
   text-align: left;
 }
 
-.nav-link-item:last-child {
-  color: black;
+.nav-item:last-child {
+  /* color: data-attr(backgroung) black; */
   padding-right: 12px;
   flex-grow: 1;
   text-align: right;
 }
 
-.nav-link-text {
+.nav-link {
   font-size: 1.2em;
 }

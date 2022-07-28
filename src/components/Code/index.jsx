@@ -27,9 +27,9 @@ const extractMetadata = (raw) => rangeParser(String(raw)) ?? []
 const Code = ({
   exclude,
   copy,
-  file,
-  codeString,
-  language,
+  file = 'test.js',
+  codeString = 'test\ntest22',
+  language = 'JS',
   highlight,
   add,
   remove,
