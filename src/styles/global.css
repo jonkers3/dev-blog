@@ -1,7 +1,6 @@
 html {
   background-color: rgb(30, 31, 33);
   color: rgb(216, 212, 207);
-  margin: 0;
 }
 
 body {
@@ -11,13 +10,11 @@ body {
   font-size: 1.1rem;
   color: rgb(216, 212, 207);
   color-scheme: dark;
-  margin: 0;
 }
 
 code {
-  /* font-size: larger; */
   font-weight: bolder;
-  background: gray;
+  background: rgb(122, 120, 120);
   padding: 4px;
   padding-left: 6px;
   padding-right: 6px;
@@ -25,7 +22,7 @@ code {
 }
 
 a {
-  color: #6c77fb;
+  color: rgb(103, 130, 247);
 }
 
 a path:hover {

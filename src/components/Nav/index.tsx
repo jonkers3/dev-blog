@@ -1,9 +1,9 @@
-import * as React from 'react'
-import { Link } from 'gatsby'
+import React from 'react'
+import Link from 'gatsby-link'
 import * as styles from './Nav.module.css'
 import GithubLink from '@assets/gh.svg'
 
-export default function Nav() {
+const Nav = () => {
   return (
     <header>
       <nav>
@@ -13,11 +13,11 @@ export default function Nav() {
               Home
             </Link>
           </li>
-          {/* <li className={styles.navLinkItem}>
-            <Link to='/contact' className={styles.navLinkText}>
+          <li className={styles.navItem}>
+            <Link to='/contact' className={styles.navLink}>
               Contact
             </Link>
-          </li> */}
+          </li>
           <li className={styles.navItem}></li>
           <li className={styles.navItem}>
             <a
@@ -33,3 +33,5 @@ export default function Nav() {
     </header>
   )
 }
+
+export default Nav

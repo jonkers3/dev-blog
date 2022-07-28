@@ -1,17 +1,12 @@
 import * as React from 'react'
-import { Link } from 'gatsby'
+import Link from 'gatsby-link'
 import { MDXRenderer } from 'gatsby-plugin-mdx'
 import { MDXProvider } from '@mdx-js/react'
 import kebabCase from 'lodash.kebabcase'
 import { mdxComponents } from '@components'
 
-const PrevAndNext = ({ prev, next }) => (
-  <div
-    style={{
-      display: 'flex',
-      paddingTop: '3rem'
-    }}
-  >
+const PrevAndNext = ({ next, prev }) => (
+  <div style={{ display: 'flex' }}>
     <div style={{ flexBasis: 'calc(50%)', padding: '20px' }}>
       {prev && (
         <Link to={prev.url}>
@@ -67,13 +62,15 @@ const PostPage = ({ pageContext, ...props }) => {
         )}
       </div>
       <MDXProvider components={mdxComponents}>
-        <h1>{pageContext.node.frontmatter.title}</h1>
+        <h1 style={{ marginTop: '4rem' }}>
+          {pageContext.node.frontmatter.title}
+        </h1>
         <p>{pageContext.node.frontmatter.date}</p>
         <br />
         <MDXRenderer>{pageContext.node.body}</MDXRenderer>
       </MDXProvider>
-      <hr style={{ margin: '2rem', marginTop: '3rem' }} />
-      <PrevAndNext pageContext={pageContext} />
+      <hr style={{ margin: '50px' }} />
+      <PrevAndNext {...{ next, prev }} />
     </>
   )
 }

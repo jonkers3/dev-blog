@@ -18,7 +18,7 @@
 }
 
 .nav-item:last-child {
-  /* color: data-attr(backgroung) black; */
+  /* color: data-attr(background) black; */
   padding-right: 12px;
   flex-grow: 1;
   text-align: right;

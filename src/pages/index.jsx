@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { graphql, Link } from 'gatsby'
+import { graphql } from 'gatsby'
+import Link from 'gatsby-link'
 import kebabCase from 'lodash.kebabcase'
 
 const BlogPage = ({ data }) => {
@@ -20,10 +21,10 @@ const BlogPage = ({ data }) => {
           <p>
             Posted: {node.frontmatter.date} in{' '}
             {node.frontmatter.tags.map((tag, i) => (
-              <>
+              <span key={i}>
                 <Link to={`/tags/${kebabCase(tag)}`}>{tag}</Link>
                 {i < node.frontmatter.tags.length - 1 ? ', ' : ''}
-              </>
+              </span>
             ))}
           </p>
         </article>

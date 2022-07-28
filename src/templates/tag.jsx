@@ -1,11 +1,9 @@
 import React from 'react'
-import { graphql, Link } from 'gatsby'
+import Link from 'gatsby-link'
+import { graphql } from 'gatsby'
 
-export default function TagPage({
-  data: { allMdx },
-  pageContext: { tag, slugs }
-}) {
-  const posts = allMdx.edges
+const TagPage = ({ data, pageContext: { tag } }) => {
+  const posts = data.allMdx.edges
 
   return (
     <>
@@ -40,3 +38,5 @@ export const pageQuery = graphql`
     }
   }
 `
+
+export default TagPage
