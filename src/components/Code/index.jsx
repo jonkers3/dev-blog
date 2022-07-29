@@ -53,7 +53,8 @@ const Code = ({
   const showLineNums = parseInt(start) > 0
   const hideGutter = !showLineNums && adding.length < 1 && removing.length < 1
 
-  const copyExclude = removing + excluding
+  const copyExclude = removing.concat(excluding)
+  debugger
   const copyString = getCopyString(copyExclude, codeString)
 
   return (
@@ -132,7 +133,7 @@ const getCopyString = (copyExclude, codeString) =>
   copyExclude.length
     ? codeString
         .split('\n')
-        .filter((x, i) => copyExclude.includes(i + 1))
+        .filter((x, i) => !copyExclude.includes(i + 1))
         .join('\n')
     : codeString
 

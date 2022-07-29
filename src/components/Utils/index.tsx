@@ -9,6 +9,5 @@ export function If({
   condition: boolean
   otherwise: unknown
 }) {
-  debugger
   return condition ? <>{children}</> : otherwise ?? null
 }
