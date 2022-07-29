@@ -69,7 +69,7 @@ const Code = ({
       </div>
       <div className={styles.codeContainer}>
         <Highlight {...defaultProps} code={codeString} language={language}>
-          {({ className, style, tokens, getLineProps, getTokenProps }) => (
+          {({ tokens, getLineProps, getTokenProps }) => (
             <pre
               className={clsx({
                 [styles.terminal]: isTerminal || language === 'none'
