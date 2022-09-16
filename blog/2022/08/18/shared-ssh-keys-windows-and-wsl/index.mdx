@@ -1,0 +1,25 @@
+---
+title: Shared SSH Keys for Windows and WSL
+description: ""
+date: ""
+preview: ""
+draft: ""
+tags:
+  - Workflow Tips
+  - Guides
+categories: ""
+---
+
+Supposedly, in /etc/wsl.conf:
+```
+[automount]
+options = "metadata,umask=022,fmask=111"
+```
+
+With that, VSCode cannot connect to WSL as a remote. However, it doesn't seem to need this.
+
+chmod 700 .ssh
+chmod 600 .ssh/id_rsa
+chmod 644 .ssh/id_rsa.pub
+
+G@G

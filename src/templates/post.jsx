@@ -15,7 +15,13 @@ const PrevAndNext = ({ next, prev }) => (
         </Link>
       )}
     </div>
-    <div style={{ textAlign: 'end', flexBasis: 'calc(50%)', padding: '20px' }}>
+    <div
+      style={{
+        textAlign: 'end',
+        flexBasis: 'calc(50%)',
+        padding: '20px',
+      }}
+    >
       {next && (
         <Link to={next.url}>
           <span>Next</span>
@@ -30,14 +36,14 @@ const PostPage = ({ pageContext, ...props }) => {
   const next = pageContext.next
     ? {
         url: `/${pageContext.next.slug}`,
-        title: pageContext.next.frontmatter.title
+        title: pageContext.next.frontmatter.title,
       }
     : null
 
   const prev = pageContext.prev
     ? {
         url: `/${pageContext.prev.slug}`,
-        title: pageContext.prev.frontmatter.title
+        title: pageContext.prev.frontmatter.title,
       }
     : null
 
@@ -45,21 +51,9 @@ const PostPage = ({ pageContext, ...props }) => {
     <>
       <TagList tags={pageContext.node.frontmatter.tags} />
       <div style={{ textAlign: 'right' }}>
-        {prev ? (
-          <>
-            <Link to={prev.url}>{'< '}Prev Post</Link>
-          </>
-        ) : (
-          '< Prev Post'
-        )}
+        {(prev && <Link to={prev.url}>{'< '}Prev Post</Link>) || '< Prev Post'}
         <> | </>
-        {next ? (
-          <>
-            <Link to={next.url}>Next Post{' >'}</Link>
-          </>
-        ) : (
-          'Next Post >'
-        )}
+        {(next && <Link to={next.url}>Next Post{' >'}</Link>) || 'Next Post >'}
       </div>
       <MDXProvider components={mdxComponents}>
         <h1 style={{ marginTop: '4rem' }}>

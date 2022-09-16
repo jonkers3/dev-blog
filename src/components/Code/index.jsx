@@ -35,7 +35,7 @@ const Code = ({
   remove,
   output,
   command,
-  start = 0
+  start = 0,
 }) => {
   const isTerminal = !!output || language === 'sh'
 
@@ -54,7 +54,6 @@ const Code = ({
   const hideGutter = !showLineNums && adding.length < 1 && removing.length < 1
 
   const copyExclude = removing.concat(excluding)
-  debugger
   const copyString = getCopyString(copyExclude, codeString)
 
   return (
@@ -73,7 +72,7 @@ const Code = ({
           {({ tokens, getLineProps, getTokenProps }) => (
             <pre
               className={clsx({
-                [styles.terminal]: isTerminal || language === 'none'
+                [styles.terminal]: isTerminal || language === 'none',
               })}
             >
               {parseInt(copy) !== 0 && (
@@ -93,7 +92,7 @@ const Code = ({
                   props['data-prepend'] = getTerminalCommands(
                     i,
                     commands,
-                    codeString
+                    codeString,
                   )
                 } else if (showLineNums) {
                   props['data-line-number'] = `${(
@@ -111,12 +110,18 @@ const Code = ({
                       [styles.terminalOutput]: terminalOutput.includes(i + 1),
                       [styles.addLine]: adding.includes(i + 1),
                       [styles.removeLine]: removing.includes(i + 1),
-                      [styles.highlightLine]: allHighlighted.includes(i + 1)
+                      [styles.highlightLine]: allHighlighted.includes(i + 1),
                     })}
                     {...props}
                   >
                     {line.map((token, key) => (
-                      <span key={key} {...getTokenProps({ token, key })} />
+                      <span
+                        key={key}
+                        {...getTokenProps({
+                          token,
+                          key,
+                        })}
+                      />
                     ))}
                   </div>
                 )
